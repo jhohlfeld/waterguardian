@@ -1,3 +1,5 @@
+import pluginTypography from "@tailwindcss/typography"
+import { radixThemePreset } from "radix-themes-tw"
 import type { Config } from "tailwindcss"
 
 export default {
@@ -8,12 +10,8 @@ export default {
     "../../packages/ui/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
-    extend: {
-      colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
-      },
-    },
+    extend: {},
   },
-  plugins: [],
+  plugins: [pluginTypography],
+  presets: [radixThemePreset],
 } satisfies Config
