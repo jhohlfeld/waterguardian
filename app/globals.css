@@ -1,24 +1,7 @@
+@import '@radix-ui/themes/styles.css';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-:root {
-  --background: theme(colors.white);
-  --foreground: theme(colors.neutral.900);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: theme(colors.neutral.950);
-    --foreground: theme(colors.neutral.200);
-  }
-}
-
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-}
 
 @layer utilities {
   .text-balance {
