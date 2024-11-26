@@ -1,9 +1,10 @@
-import type { Metadata } from 'next'
-import './globals.css'
-
 import { DarkMode } from '@/components/DarkMode'
+import Footer from '@/components/ui/footer'
+import Header from '@/components/ui/header'
 import { cn } from '@/util/cn'
 import { GeistSans } from 'geist/font/sans'
+import type { Metadata } from 'next'
+import './globals.css'
 
 export const metadata: Metadata = {
   title: 'Waterguardian',
@@ -30,7 +31,9 @@ export default function RootLayout({
         data-radius="medium"
         data-scaling="100%"
       >
+        <Header />
         {children}
+        <Footer />
         <DarkMode />
       </body>
     </html>
