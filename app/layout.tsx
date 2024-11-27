@@ -1,6 +1,6 @@
 import { DarkMode } from '@/components/DarkMode'
-import Footer from '@/components/ui/footer'
-import Header from '@/components/ui/header'
+import Footer from '@/components/Footer'
+import Header from '@/components/header/Header'
 import { cn } from '@/util/cn'
 import { GeistSans } from 'geist/font/sans'
 import type { Metadata } from 'next'
@@ -21,7 +21,7 @@ export default function RootLayout({
       <body
         className={cn(
           GeistSans.className,
-          'antialiased radix-themes radix-themes-custom-fonts font-sans',
+          'antialiased radix-themes radix-themes-custom-fonts font-sans h-screen overflow-y-auto',
         )}
         data-is-root-theme="true"
         data-accent-color="indigo"

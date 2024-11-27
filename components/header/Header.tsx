@@ -2,21 +2,18 @@
 
 import Link from 'next/link'
 import { useState } from 'react'
+import { Logo } from './Logo'
 
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   return (
-    <header className="w-full bg-background text-gray-12">
+    <header className="w-full bg-background text-gray-12 sticky top-0 z-10">
       <nav className="flex justify-between items-center p-4 max-w-7xl mx-auto">
         {/* Logo */}
         <div className="flex items-center">
           <Link href="/">
-            <img
-              src="/logo/logo-word.svg"
-              alt="WaterGuardia logo"
-              className="h-8"
-            />
+            <Logo />
           </Link>
         </div>
 
@@ -33,16 +30,6 @@ const Header: React.FC = () => {
           </Link>
         </div>
 
-        {/* Dark Mode Toggle Placeholder */}
-        <div className="hidden md:flex">
-          <button
-            className="p-2 rounded-md bg-background text-gray-12"
-            disabled
-          >
-            Dark Mode (Coming Soon)
-          </button>
-        </div>
-
         {/* Hamburger Menu for Mobile */}
         <div className="md:hidden">
           <button
@@ -51,9 +38,9 @@ const Header: React.FC = () => {
             aria-label="Toggle navigation menu"
           >
             {/* Hamburger Icon */}
-            <span className="block w-6 h-0.5 text-gray-12 mb-1"></span>
-            <span className="block w-6 h-0.5 text-gray-12 mb-1"></span>
-            <span className="block w-6 h-0.5 text-gray-12"></span>
+            <span className="block w-6 h-0.5 border border-gray-12 mb-1"></span>
+            <span className="block w-6 h-0.5 border border-gray-12 mb-1"></span>
+            <span className="block w-6 h-0.5 border border-gray-12"></span>
           </button>
         </div>
       </nav>
