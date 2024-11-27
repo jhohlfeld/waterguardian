@@ -1,35 +1,38 @@
-import type { Metadata } from "next";
-import localFont from "next/font/local";
-import "./globals.css";
+import type { Metadata } from 'next'
+import './globals.css'
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
-});
+import { DarkMode } from '@/components/DarkMode'
+import { cn } from '@/util/cn'
+import { GeistSans } from 'geist/font/sans'
 
 export const metadata: Metadata = {
-  title: "Waterguardian",
-  description: "Das Citizen Science Projekt aus Braunschweig",
-};
+  title: 'Waterguardian',
+  description: 'Das Citizen Science Projekt aus Braunschweig',
+}
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: React.ReactNode
 }>) {
   return (
     <html lang="de">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={cn(
+          GeistSans.className,
+          'antialiased radix-themes radix-themes-custom-fonts font-sans',
+        )}
+        data-is-root-theme="true"
+        data-accent-color="indigo"
+        data-gray-color="slate"
+        data-has-background="true"
+        data-panel-background="translucent"
+        data-radius="medium"
+        data-scaling="100%"
       >
         {children}
+        <DarkMode />
       </body>
     </html>
-  );
+  )
 }
