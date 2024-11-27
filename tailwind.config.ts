@@ -32,6 +32,9 @@ const config: Config = {
         },
       },
     },
+    colors: {
+      background: 'var(--color-background)',
+    },
   },
   plugins: [typography, tailwindcssRadixColors],
 }
