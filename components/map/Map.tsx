@@ -23,7 +23,7 @@ const measurementData: MeasurementData[] = [
 ]
 
 export const Map = () => {
-  const { mapContainer, map } = useMap({
+  const { mapContainerRef, map } = useMap({
     draggable: false,
     scrollZoom: false,
     keyboard: false,
@@ -39,7 +39,7 @@ export const Map = () => {
 
   return (
     <div className="relative w-screen h-[80vh]">
-      <div ref={mapContainer} className="w-full h-full"></div>
+      <div ref={mapContainerRef} className="w-full h-full"></div>
     </div>
   )
 }

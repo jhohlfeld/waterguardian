@@ -1,6 +1,6 @@
 import { maptilerApiKey, maptilerHeroStyleKey } from '@/config'
 import maplibregl from 'maplibre-gl'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 const lng = 10.522
 const lat = 52.264
@@ -12,32 +12,33 @@ export function useMap(mapOptions?: {
   scrollZoom?: boolean
   keyboard?: boolean
 }) {
-  const mapRef = useRef<maplibregl.Map | null>(null)
-  const mapContainer = useRef<HTMLDivElement | null>(null)
+  const [map, setMap] = useState<maplibregl.Map | null>(null)
+  const mapContainerRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
-    if (!mapContainer.current || mapRef.current) {
+    if (!mapContainerRef.current || map !== null) {
       return
     }
-    mapRef.current = new maplibregl.Map({
-      container: mapContainer.current,
+
+    const instance = new maplibregl.Map({
+      container: mapContainerRef.current,
       style,
       center: [lng, lat],
       zoom: zoom,
     })
 
-    const map = mapRef.current
-
     if (mapOptions?.draggable === false) {
-      map.dragPan.disable()
+      instance.dragPan.disable()
     }
     if (mapOptions?.scrollZoom === false) {
-      map.scrollZoom.disable()
+      instance.scrollZoom.disable()
     }
     if (mapOptions?.keyboard === false) {
-      map.keyboard.disable()
+      instance.keyboard.disable()
     }
-  }, [mapOptions])
 
-  return { mapContainer, map: mapRef.current }
+    setMap(instance)
+  }, [mapOptions, map])
+
+  return { mapContainerRef, map }
 }
