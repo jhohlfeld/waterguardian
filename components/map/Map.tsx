@@ -16,15 +16,21 @@ interface MeasurementData {
 const measurementData: MeasurementData[] = [
   {
     id: '1',
-    date: '20241231T00:00:00',
-    geo: [10.522, 52.264, 0],
+    date: '2024-12-31T14:00:00',
+    geo: [10.523, 52.256, 0],
     values: { Copper: 0.5, Lead: 0.3, Nickel: 0.2, Mercury: 0.1 },
+  },
+  {
+    id: '2',
+    date: '2024-12-31T14:00:00',
+    geo: [10.516, 52.272, 0],
+    values: { Copper: 0.2, Lead: 0.7, Nickel: 0.8, Mercury: 0.4 },
   },
 ]
 
 export const Map = () => {
   const { mapContainerRef, map } = useMap({
-    draggable: false,
+    draggable: true,
     scrollZoom: false,
     keyboard: false,
   })
