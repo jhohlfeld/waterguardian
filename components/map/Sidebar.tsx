@@ -1,6 +1,6 @@
 'use client'
-
 import * as Dialog from '@radix-ui/react-dialog'
+import { Cross2Icon } from '@radix-ui/react-icons'
 import { Separator } from '@radix-ui/react-separator'
 import { ReactNode } from 'react'
 import { cn } from '../../util/cn'
@@ -15,26 +15,37 @@ export const Sidebar = ({ open, onClose, children }: SidebarProps) => {
   return (
     <Dialog.Root open={open} onOpenChange={onClose}>
       <Dialog.Portal>
-        {/* Transform Transition not working, why? */}
         <Dialog.Content
           className={cn(
-            'absolute top-[var(--header-height)] right-0',
-            'h-[80vh] w-80 bg-background shadow-lg p-4',
-            'transition-transform duration-700 ease-in-out',
-            open ? 'translate-x-0' : 'translate-x-full',
+            'fixed top-[calc(var(--header-height)+1rem)] right-4',
+            'h-[75vh] w-80 bg-[--gray-1] border-l border-[--gray-6]',
+            'transform transition-transform duration-600 ease-in-out',
+            'data-[state=open]:translate-x-0 data-[state=closed]:translate-x-full',
+            'shadow-lg p-4',
+            'rounded-xl',
           )}
         >
-          <Dialog.Title className="sr-only">Measurement Details</Dialog.Title>
-          {/* Colors not working, why? */}
-          <Separator className="my-4 bg-grey-12 h-1 w-full" />
-          <div className="my-4 border-b-2 border-gray-200 w-full"></div>
+          <Dialog.Title className="sr-only text-[--gray-12] font-medium">
+            Measurement Details
+          </Dialog.Title>
+
+          <Separator className="my-6 bg-[--gray-6] h-px w-full" />
+
           <Dialog.Close
-            className="absolute top-2 right-2 text-gray-12 hover:text-gray-6"
+            className={cn(
+              'absolute top-2 right-2',
+              'h-6 w-6 rounded-full',
+              'flex items-center justify-center',
+              'text-[--gray-11] hover:text-[--gray-12]',
+              'hover:bg-[--gray-3]',
+              'transition-colors duration-300',
+            )}
             aria-label="Close"
           >
-            ✖
+            <Cross2Icon />
           </Dialog.Close>
-          {children}
+
+          <div className="text-[--gray-12]">{children}</div>
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>
