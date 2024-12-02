@@ -1,4 +1,4 @@
-@import "@radix-ui/themes/styles.css";
+@import '@radix-ui/themes/styles.css';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -12,4 +12,32 @@
 :root {
   /* fix header height to calc position of the sidebar */
   --header-height: 60px;
+}
+
+/* Keyframes for sidebar transition */
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideOut {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
+/* Sidebar transition classes */
+.animate-slideIn {
+  animation: slideIn 0.3s ease-in-out forwards;
+}
+
+.animate-slideOut {
+  animation: slideOut 0.3s ease-in-out forwards;
 }
