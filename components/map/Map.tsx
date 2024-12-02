@@ -3,6 +3,7 @@
 import maplibregl from 'maplibre-gl'
 import 'maplibre-gl/dist/maplibre-gl.css'
 import { useEffect, useState } from 'react'
+import measurementData from './data/data.json'
 import { useMap } from './hooks'
 import { Sidebar } from './Sidebar'
 
@@ -13,20 +14,9 @@ interface MeasurementData {
   values: Record<string, number>
 }
 
-const measurementData: MeasurementData[] = [
-  {
-    id: '1',
-    date: '2024-12-31T14:00:00',
-    geo: [10.523, 52.256, 0],
-    values: { Copper: 0.5, Lead: 0.3, Nickel: 0.2, Mercury: 0.1 },
-  },
-  {
-    id: '2',
-    date: '2024-12-31T14:00:00',
-    geo: [10.516, 52.272, 0],
-    values: { Copper: 0.2, Lead: 0.7, Nickel: 0.8, Mercury: 0.4 },
-  },
-]
+// Explicitly type the imported JSON data
+const typedMeasurementData: MeasurementData[] =
+  measurementData as MeasurementData[]
 
 export const Map = () => {
   const { mapContainerRef, map } = useMap({
@@ -41,7 +31,7 @@ export const Map = () => {
   useEffect(() => {
     if (!map) return
 
-    measurementData.forEach((data) => {
+    typedMeasurementData.forEach((data) => {
       const marker = new maplibregl.Marker()
         .setLngLat([data.geo[0], data.geo[1]])
         .addTo(map)

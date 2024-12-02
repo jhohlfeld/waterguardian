@@ -18,7 +18,7 @@ export const Sidebar = ({ open, onClose, children }: SidebarProps) => {
         <Dialog.Content
           className={cn(
             'fixed top-[calc(var(--header-height)+1rem)] right-4',
-            'h-[75vh] w-80 bg-[--gray-1] border-l border-[--gray-6]',
+            'h-[70vh] w-80 bg-[--gray-1] border-l border-[--gray-6]',
             open ? 'animate-slideIn' : 'animate-slideOut',
             'shadow-lg p-4',
             'rounded-xl',
