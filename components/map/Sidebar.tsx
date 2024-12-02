@@ -19,8 +19,7 @@ export const Sidebar = ({ open, onClose, children }: SidebarProps) => {
           className={cn(
             'fixed top-[calc(var(--header-height)+1rem)] right-4',
             'h-[75vh] w-80 bg-[--gray-1] border-l border-[--gray-6]',
-            'transform transition-transform duration-600 ease-in-out',
-            'data-[state=open]:translate-x-0 data-[state=closed]:translate-x-full',
+            open ? 'animate-slideIn' : 'animate-slideOut',
             'shadow-lg p-4',
             'rounded-xl',
           )}
