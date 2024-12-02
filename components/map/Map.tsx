@@ -3,7 +3,7 @@
 import maplibregl from 'maplibre-gl'
 import 'maplibre-gl/dist/maplibre-gl.css'
 import { useEffect, useState } from 'react'
-import measurementData from './data/data.json'
+import rawData from './data/data.json'
 import { useMap } from './hooks'
 import { Sidebar } from './Sidebar'
 
@@ -14,9 +14,16 @@ interface MeasurementData {
   values: Record<string, number>
 }
 
-// Explicitly type the imported JSON data
-const typedMeasurementData: MeasurementData[] =
-  measurementData as MeasurementData[]
+// Define a type for the raw JSON data
+type RawMeasurementData = Omit<MeasurementData, 'geo'> & { geo: number[] }
+
+// Cast the imported JSON data to the correct type
+const measurementData: MeasurementData[] = (
+  rawData as RawMeasurementData[]
+).map((data) => ({
+  ...data,
+  geo: data.geo as [number, number, number],
+}))
 
 export const Map = () => {
   const { mapContainerRef, map } = useMap({
@@ -31,7 +38,7 @@ export const Map = () => {
   useEffect(() => {
     if (!map) return
 
-    typedMeasurementData.forEach((data) => {
+    measurementData.forEach((data) => {
       const marker = new maplibregl.Marker()
         .setLngLat([data.geo[0], data.geo[1]])
         .addTo(map)

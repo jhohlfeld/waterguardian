@@ -24,8 +24,8 @@ export const Sidebar = ({ open, onClose, children }: SidebarProps) => {
             'rounded-xl',
           )}
         >
-          <Dialog.Title className="sr-only text-[--gray-12] font-medium">
-            Measurement Details
+          <Dialog.Title className="text-lg font-bold text-[--gray-12]">
+            Aktuelle Daten
           </Dialog.Title>
 
           <Separator className="my-6 bg-[--gray-6] h-px w-full" />
