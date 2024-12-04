@@ -34,7 +34,10 @@ export const Sidebar = ({ open, onClose, children }: SidebarProps) => {
         'h-[70vh] w-80 bg-gray-1 border-l border-gray-6',
         'shadow-lg p-4',
         'rounded-xl overflow-hidden',
-        isClosing ? 'animate-slideOut' : 'animate-slideIn',
+        'transition-all duration-300 ease-in-out',
+        isClosing
+          ? 'translate-x-[110%] opacity-0'
+          : 'translate-x-0 opacity-100',
       )}
     >
       <h2 className="text-lg font-bold text-gray-12">Aktuelle Daten</h2>
