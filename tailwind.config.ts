@@ -9,6 +9,9 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      spacing: {
+        header: '60px',
+      },
       typography: {
         DEFAULT: {
           css: {
@@ -31,9 +34,6 @@ const config: Config = {
           },
         },
       },
-    },
-    colors: {
-      background: 'var(--color-background)',
     },
   },
   plugins: [typography, tailwindcssRadixColors],

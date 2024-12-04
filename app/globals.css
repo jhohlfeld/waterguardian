@@ -9,11 +9,6 @@
   }
 }
 
-:root {
-  /* fix header height to calc position of the sidebar */
-  --header-height: 60px;
-}
-
 /* Keyframes for sidebar transition */
 @keyframes slideIn {
   from {
