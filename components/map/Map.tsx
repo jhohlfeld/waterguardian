@@ -35,6 +35,14 @@ export const Map = () => {
   const [selectedData, setSelectedData] = useState<MeasurementData | null>(null)
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
+  if (!map) {
+    return (
+      <div className="relative w-screen h-[80vh]">
+        <div ref={mapContainerRef} className="w-full h-full" />
+      </div>
+    )
+  }
+
   const handleMarkerClick = (data: MeasurementData) => {
     setSelectedData(data)
     setSidebarOpen(true)
@@ -43,16 +51,15 @@ export const Map = () => {
   return (
     <div className="relative w-screen h-[80vh]">
       <div ref={mapContainerRef} className="w-full h-full" />
-      {map &&
-        measurementData.map((data) => (
-          <CustomMarker
-            key={data.id}
-            map={map}
-            position={[data.geo[0], data.geo[1]]}
-            onClick={() => handleMarkerClick(data)}
-            isSelected={selectedData?.id === data.id}
-          />
-        ))}
+      {measurementData.map((data) => (
+        <CustomMarker
+          key={data.id}
+          map={map}
+          position={[data.geo[0], data.geo[1]]}
+          onClick={() => handleMarkerClick(data)}
+          isSelected={selectedData?.id === data.id}
+        />
+      ))}
       <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)}>
         {selectedData ? (
           <div>
