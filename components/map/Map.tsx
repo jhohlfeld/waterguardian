@@ -57,7 +57,7 @@ export const Map = () => {
         {selectedData ? (
           <div>
             <h2 className="text-lg font-bold">Measurement Data</h2>
-            <div className="mt-2 text-sm text-[--gray-11]">
+            <div className="mt-2 text-sm text-gray-11">
               ID: {selectedData.id}
             </div>
             <p className="mt-2">
