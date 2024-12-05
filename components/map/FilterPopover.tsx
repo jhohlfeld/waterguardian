@@ -67,8 +67,8 @@ export const FilterPopover = ({
           className={cn(
             'p-4 right-4 bg-white rounded-lg shadow-lg z-50',
             'duration-300',
-            'data-[state=open]:animate-in data-[state=open]:fade-in data-[state=open]:slide-in-from-bottom-[110%]',
-            'data-[state=closed]:animate-out data-[state=closed]:fade-out data-[state=closed]:slide-out-to-bottom-[110%]',
+            'data-[state=open]:animate-in data-[state=open]:fade-in data-[state=open]:slide-in-from-bottom-[100%]',
+            'data-[state=closed]:animate-out data-[state=closed]:fade-out data-[state=closed]:slide-out-to-bottom-[100%]',
           )}
           side="top"
           align="end"

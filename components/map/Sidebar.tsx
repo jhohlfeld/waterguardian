@@ -35,8 +35,8 @@ export const Sidebar = ({ open, onClose, children }: SidebarProps) => {
         'rounded-xl overflow-y-auto',
         'duration-300',
         open
-          ? 'animate-in fade-in slide-in-from-right-[110%]'
-          : 'animate-out fade-out slide-out-to-right-[110%]',
+          ? 'animate-in fade-in slide-in-from-right-[100%]'
+          : 'animate-out fade-out slide-out-to-right-[100%]',
       )}
     >
       <h2 className="text-lg font-bold text-gray-12">Aktuelle Daten</h2>
