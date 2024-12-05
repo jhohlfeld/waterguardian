@@ -75,10 +75,19 @@ export const Map = () => {
     setFilteredTypes(selectedTypes)
   }
 
+  const handleFilterOpen = () => {
+    if (sidebarOpen) {
+      setSidebarOpen(false)
+    }
+  }
+
   return (
     <div className="relative w-screen h-[80vh]">
       <div ref={mapContainerRef} className="w-full h-full relative">
-        <FilterPopover onFilterChange={handleFilterChange} />
+        <FilterPopover
+          onFilterChange={handleFilterChange}
+          onOpen={handleFilterOpen}
+        />
       </div>
       {geojsonData.features
         .filter((feature) => filteredTypes.includes(feature.properties.type))
@@ -100,21 +109,27 @@ export const Map = () => {
         {selectedFeature ? (
           <div className="space-y-6">
             <div>
-              <div className="text-sm text-gray-10 mb-1">Data Type</div>
+              <div className="text-sm font-semibold text-gray-10 mb-1">
+                Data Type
+              </div>
               <div className="text-gray-12">
                 {typeLabels[selectedFeature.properties.type]}
               </div>
             </div>
 
             <div>
-              <div className="text-sm text-gray-10 mb-1">Location ID</div>
+              <div className="text-sm font-semibold text-gray-10 mb-1">
+                Location ID
+              </div>
               <div className="text-gray-12 font-mono">
                 {selectedFeature.properties.id}
               </div>
             </div>
 
             <div>
-              <div className="text-sm text-gray-10 mb-1">Measurement Date</div>
+              <div className="text-sm font-semibold text-gray-10 mb-1">
+                Measurement Date
+              </div>
               <div className="text-gray-12">
                 {new Date(selectedFeature.properties.date).toLocaleString(
                   'de-DE',
@@ -127,7 +142,9 @@ export const Map = () => {
             </div>
 
             <div>
-              <div className="text-sm text-gray-10 mb-1">Measurements</div>
+              <div className="text-sm font-semibold text-gray-10 mb-1">
+                Measurements
+              </div>
               <div className="bg-gray-2 rounded-lg p-4">
                 <ul className="space-y-3">
                   {Object.entries(selectedFeature.properties.measurements).map(
