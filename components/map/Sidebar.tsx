@@ -30,17 +30,17 @@ export const Sidebar = ({ open, onClose, children }: SidebarProps) => {
   return (
     <div
       className={cn(
-        'fixed top-[calc(theme(spacing.header)+1rem)] right-4',
-        'h-[70vh] w-80 bg-gray-1 border-l border-gray-6',
+        'absolute top-4 right-4',
+        'h-fit w-80 bg-gray-1 border-l border-gray-6',
         'shadow-lg p-4',
-        'rounded-xl overflow-hidden',
+        'rounded-xl overflow-y-auto',
         'transition-all duration-300 ease-in-out',
         isClosing
           ? 'translate-x-[110%] opacity-0'
           : 'translate-x-0 opacity-100',
       )}
     >
-      <h2 className="text-lg font-bold text-gray-12">Aktuelle Daten</h2>
+      <h2 className="text-lg font-bold text-gray-11">Aktuelle Daten</h2>
 
       <Separator className="my-6 bg-gray-6 h-px w-full" />
 
@@ -59,7 +59,7 @@ export const Sidebar = ({ open, onClose, children }: SidebarProps) => {
         <Cross2Icon />
       </button>
 
-      <div className="text-gray-12">{children}</div>
+      <div className="text-gray-11">{children}</div>
     </div>
   )
 }
