@@ -3,27 +3,37 @@
 import 'maplibre-gl/dist/maplibre-gl.css'
 import { useState } from 'react'
 import { CustomMarker } from './CustomMarker'
-import rawData from './data/data.json'
+import geoData from './data/data.json'
 import { useMap } from './hooks'
 import { Sidebar } from './Sidebar'
 
-interface MeasurementData {
-  id: string
-  date: string
-  geo: [number, number, number]
-  values: Record<string, number>
+// GeoJSON types following the specification
+type Coordinates = [number, number, number]
+
+interface Geometry {
+  type: 'Point'
+  coordinates: Coordinates
 }
 
-// Define a type for the raw JSON data
-type RawMeasurementData = Omit<MeasurementData, 'geo'> & { geo: number[] }
+interface Properties {
+  id: string
+  date: string
+  measurements: Record<string, number>
+}
 
-// Cast the imported JSON data to the correct type
-const measurementData: MeasurementData[] = (
-  rawData as RawMeasurementData[]
-).map((data) => ({
-  ...data,
-  geo: data.geo as [number, number, number],
-}))
+interface Feature {
+  type: 'Feature'
+  geometry: Geometry
+  properties: Properties
+}
+
+interface FeatureCollection {
+  type: 'FeatureCollection'
+  features: Feature[]
+}
+
+// Safely cast the imported data
+const geojsonData = geoData as unknown as FeatureCollection
 
 export const Map = () => {
   const { mapContainerRef, map } = useMap({
@@ -32,7 +42,7 @@ export const Map = () => {
     keyboard: false,
   })
 
-  const [selectedData, setSelectedData] = useState<MeasurementData | null>(null)
+  const [selectedFeature, setSelectedFeature] = useState<Feature | null>(null)
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   if (!map) {
@@ -43,41 +53,46 @@ export const Map = () => {
     )
   }
 
-  const handleMarkerClick = (data: MeasurementData) => {
-    setSelectedData(data)
+  const handleMarkerClick = (feature: Feature) => {
+    setSelectedFeature(feature)
     setSidebarOpen(true)
   }
 
   return (
     <div className="relative w-screen h-[80vh]">
       <div ref={mapContainerRef} className="w-full h-full" />
-      {measurementData.map((data) => (
+      {geojsonData.features.map((feature) => (
         <CustomMarker
-          key={data.id}
+          key={feature.properties.id}
           map={map}
-          position={[data.geo[0], data.geo[1]]}
-          onClick={() => handleMarkerClick(data)}
-          isSelected={selectedData?.id === data.id}
+          position={[
+            feature.geometry.coordinates[0],
+            feature.geometry.coordinates[1],
+          ]}
+          onClick={() => handleMarkerClick(feature)}
+          isSelected={selectedFeature?.properties.id === feature.properties.id}
         />
       ))}
       <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)}>
-        {selectedData ? (
+        {selectedFeature ? (
           <div>
             <h2 className="text-lg font-bold">Measurement Data</h2>
             <div className="mt-2 text-sm text-gray-11">
-              ID: {selectedData.id}
+              ID: {selectedFeature.properties.id}
             </div>
             <p className="mt-2">
               <strong>Date:</strong>{' '}
-              {new Date(selectedData.date).toLocaleString()}
+              {new Date(selectedFeature.properties.date).toLocaleString()}
             </p>
             <ul className="mt-4 space-y-2">
-              {Object.entries(selectedData.values).map(([key, value]) => (
-                <li key={key} className="flex justify-between">
-                  <strong>{key}:</strong>
-                  <span>{value}</span>
-                </li>
-              ))}
+              {Object.entries(selectedFeature.properties.measurements).map(
+                ([key, value]) => (
+                  <li key={key} className="flex justify-between">
+                    <strong>{key}:</strong>
+                    <span>{value}</span>
+                  </li>
+                ),
+              )}
             </ul>
           </div>
         ) : (
