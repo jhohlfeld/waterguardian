@@ -4,6 +4,7 @@ import 'maplibre-gl/dist/maplibre-gl.css'
 import { useState } from 'react'
 import { CustomMarker } from './CustomMarker'
 import geoData from './data/data.json'
+import { FilterPopover } from './FilterPopover'
 import { useMap } from './hooks'
 import { Sidebar } from './Sidebar'
 
@@ -19,6 +20,7 @@ interface Properties {
   id: string
   date: string
   measurements: Record<string, number>
+  type: string
 }
 
 interface Feature {
@@ -44,6 +46,11 @@ export const Map = () => {
 
   const [selectedFeature, setSelectedFeature] = useState<Feature | null>(null)
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [filteredTypes, setFilteredTypes] = useState<string[]>([
+    'boje',
+    'labor',
+    'manuell',
+  ])
 
   if (!map) {
     return (
@@ -58,21 +65,31 @@ export const Map = () => {
     setSidebarOpen(true)
   }
 
+  const handleFilterChange = (selectedTypes: string[]) => {
+    setFilteredTypes(selectedTypes)
+  }
+
   return (
     <div className="relative w-screen h-[80vh]">
-      <div ref={mapContainerRef} className="w-full h-full" />
-      {geojsonData.features.map((feature) => (
-        <CustomMarker
-          key={feature.properties.id}
-          map={map}
-          position={[
-            feature.geometry.coordinates[0],
-            feature.geometry.coordinates[1],
-          ]}
-          onClick={() => handleMarkerClick(feature)}
-          isSelected={selectedFeature?.properties.id === feature.properties.id}
-        />
-      ))}
+      <div ref={mapContainerRef} className="w-full h-full relative">
+        <FilterPopover onFilterChange={handleFilterChange} />
+      </div>
+      {geojsonData.features
+        .filter((feature) => filteredTypes.includes(feature.properties.type))
+        .map((feature) => (
+          <CustomMarker
+            key={feature.properties.id}
+            map={map}
+            position={[
+              feature.geometry.coordinates[0],
+              feature.geometry.coordinates[1],
+            ]}
+            onClick={() => handleMarkerClick(feature)}
+            isSelected={
+              selectedFeature?.properties.id === feature.properties.id
+            }
+          />
+        ))}
       <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)}>
         {selectedFeature ? (
           <div>
