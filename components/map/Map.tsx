@@ -92,28 +92,53 @@ export const Map = () => {
         ))}
       <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)}>
         {selectedFeature ? (
-          <div>
-            <h2 className="text-lg font-bold">Measurement Data</h2>
-            <div className="mt-2 text-sm text-gray-11">
-              ID: {selectedFeature.properties.id}
+          <div className="space-y-6">
+            <div>
+              <div className="text-sm text-gray-10 mb-1">Location ID</div>
+              <div className="text-gray-12 font-mono">
+                {selectedFeature.properties.id}
+              </div>
             </div>
-            <p className="mt-2">
-              <strong>Date:</strong>{' '}
-              {new Date(selectedFeature.properties.date).toLocaleString()}
-            </p>
-            <ul className="mt-4 space-y-2">
-              {Object.entries(selectedFeature.properties.measurements).map(
-                ([key, value]) => (
-                  <li key={key} className="flex justify-between">
-                    <strong>{key}:</strong>
-                    <span>{value}</span>
-                  </li>
-                ),
-              )}
-            </ul>
+
+            <div>
+              <div className="text-sm text-gray-10 mb-1">Measurement Date</div>
+              <div className="text-gray-12">
+                {new Date(selectedFeature.properties.date).toLocaleString(
+                  'de-DE',
+                  {
+                    dateStyle: 'medium',
+                    timeStyle: 'short',
+                  },
+                )}
+              </div>
+            </div>
+
+            <div>
+              <div className="text-sm text-gray-10 mb-1">Measurements</div>
+              <div className="bg-gray-2 rounded-lg p-4">
+                <ul className="space-y-3">
+                  {Object.entries(selectedFeature.properties.measurements).map(
+                    ([key, value]) => (
+                      <li
+                        key={key}
+                        className="flex items-center justify-between"
+                      >
+                        <span className="text-gray-11">{key}</span>
+                        <div className="flex items-center gap-2">
+                          <span className="text-gray-12 font-medium">
+                            {value}
+                          </span>
+                          <span className="text-sm text-gray-10">mg/L</span>
+                        </div>
+                      </li>
+                    ),
+                  )}
+                </ul>
+              </div>
+            </div>
           </div>
         ) : (
-          <p>No data selected</p>
+          <p className="text-gray-11">No data selected</p>
         )}
       </Sidebar>
     </div>
