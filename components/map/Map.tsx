@@ -34,6 +34,12 @@ interface FeatureCollection {
   features: Feature[]
 }
 
+const typeLabels: Record<string, string> = {
+  boje: 'Bojen Daten',
+  labor: 'Labor-Daten',
+  manuell: 'Citizen Science Daten',
+}
+
 // Safely cast the imported data
 const geojsonData = geoData as unknown as FeatureCollection
 
@@ -93,6 +99,13 @@ export const Map = () => {
       <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)}>
         {selectedFeature ? (
           <div className="space-y-6">
+            <div>
+              <div className="text-sm text-gray-10 mb-1">Data Type</div>
+              <div className="text-gray-12">
+                {typeLabels[selectedFeature.properties.type]}
+              </div>
+            </div>
+
             <div>
               <div className="text-sm text-gray-10 mb-1">Location ID</div>
               <div className="text-gray-12 font-mono">
