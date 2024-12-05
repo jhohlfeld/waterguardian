@@ -54,6 +54,23 @@
         },
         "type": "labor"
       }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [10.512, 52.288, 0]
+      },
+      "properties": {
+        "id": "4",
+        "date": "2024-12-31T14:00:00",
+        "measurements": {
+          "Copper": 0.4,
+          "Lead": 0.7,
+          "Nickel": 0.8
+        },
+        "type": "labor"
+      }
     }
   ]
 }

@@ -11,41 +11,40 @@ interface SidebarProps {
 }
 
 export const Sidebar = ({ open, onClose, children }: SidebarProps) => {
-  const [isClosing, setIsClosing] = useState(false)
+  const [isVisible, setIsVisible] = useState(false)
 
   useEffect(() => {
     if (open) {
-      setIsClosing(false)
+      setIsVisible(true)
+    } else {
+      const timer = setTimeout(() => {
+        setIsVisible(false)
+      }, 300) // Match animation duration
+      return () => clearTimeout(timer)
     }
   }, [open])
 
-  const handleClose = () => {
-    setIsClosing(true)
-    // Wait for animation to complete before calling onClose
-    setTimeout(onClose, 300) // 300ms matches the animation duration
-  }
-
-  if (!open && !isClosing) return null
+  if (!isVisible && !open) return null
 
   return (
     <div
       className={cn(
-        'absolute top-4 right-4',
+        'absolute top-4 right-4 z-40',
         'h-fit w-80 bg-gray-1 border-l border-gray-6',
         'shadow-lg p-4',
         'rounded-xl overflow-y-auto',
-        'transition-all duration-300 ease-in-out',
-        isClosing
-          ? 'translate-x-[110%] opacity-0'
-          : 'translate-x-0 opacity-100',
+        'duration-300',
+        open
+          ? 'animate-in fade-in slide-in-from-right-[110%]'
+          : 'animate-out fade-out slide-out-to-right-[110%]',
       )}
     >
-      <h2 className="text-lg font-bold text-gray-11">Aktuelle Daten</h2>
+      <h2 className="text-lg font-bold text-gray-12">Aktuelle Daten</h2>
 
       <Separator className="my-6 bg-gray-6 h-px w-full" />
 
       <button
-        onClick={handleClose}
+        onClick={onClose}
         className={cn(
           'absolute top-2 right-2',
           'h-6 w-6 rounded-full',
