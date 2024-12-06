@@ -1,0 +1,76 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [10.523, 52.256, 0]
+      },
+      "properties": {
+        "id": "1",
+        "date": "2024-12-31T14:00:00",
+        "measurements": {
+          "Copper": 0.1,
+          "Lead": 0.3,
+          "Nickel": 0.2,
+          "Mercury": 0.1
+        },
+        "type": "boje"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [10.516, 52.272, 0]
+      },
+      "properties": {
+        "id": "2",
+        "date": "2024-12-31T14:00:00",
+        "measurements": {
+          "Copper": 0.2,
+          "Lead": 0.7,
+          "Nickel": 0.8,
+          "Mercury": 0.4
+        },
+        "type": "manuell"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [10.511, 52.267, 0]
+      },
+      "properties": {
+        "id": "3",
+        "date": "2024-12-31T14:00:00",
+        "measurements": {
+          "Copper": 0.3,
+          "Lead": 0.7,
+          "Nickel": 0.8,
+          "Mercury": 0.4
+        },
+        "type": "labor"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [10.512, 52.288, 0]
+      },
+      "properties": {
+        "id": "4",
+        "date": "2024-12-31T14:00:00",
+        "measurements": {
+          "Copper": 0.4,
+          "Lead": 0.7,
+          "Nickel": 0.8
+        },
+        "type": "labor"
+      }
+    }
+  ]
+}

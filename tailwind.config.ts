@@ -1,5 +1,6 @@
 import typography from '@tailwindcss/typography'
 import type { Config } from 'tailwindcss'
+import tailwindcssAnimate from 'tailwindcss-animate'
 import tailwindcssRadixColors from 'tailwindcss-radix-colors'
 
 const config: Config = {
@@ -9,6 +10,9 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      spacing: {
+        header: '60px',
+      },
       typography: {
         DEFAULT: {
           css: {
@@ -32,10 +36,7 @@ const config: Config = {
         },
       },
     },
-    colors: {
-      background: 'var(--color-background)',
-    },
   },
-  plugins: [typography, tailwindcssRadixColors],
+  plugins: [typography, tailwindcssRadixColors, tailwindcssAnimate],
 }
 export default config

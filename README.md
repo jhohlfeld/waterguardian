@@ -18,25 +18,28 @@ This project is built with [Next.js](https://nextjs.org), a React framework for 
 ### Installation
 
 1. Clone the repository:
-    ```bash
-    git clone https://github.com/your-repo/waterguardian.git
-    cd waterguardian
-    ```
+
+   ```bash
+   git clone https://github.com/your-repo/waterguardian.git
+   cd waterguardian
+   ```
 
 2. Install dependencies:
-    ```bash
-    bun install
-    ```
+
+   ```bash
+   bun install
+   ```
 
 3. Set up your `.env` file based on `.env.template`:
-    ```bash
-    cp .env.template .env
-    # Edit .env to include your MapTiler API keys and other environment variables
-    ```
+   ```bash
+   cp .env.template .env
+   # Edit .env to include your MapTiler API keys and other environment variables
+   ```
 
 ### Running the Development Server
 
 To start the development server, run:
+
 ```bash
 bun dev
 ```
