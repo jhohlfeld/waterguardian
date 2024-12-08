@@ -8,32 +8,6 @@ import { FilterPopover } from './FilterPopover'
 import { useMap } from './hooks'
 import { Sidebar } from './Sidebar'
 
-// GeoJSON types following the specification
-type Coordinates = [number, number, number]
-
-interface Geometry {
-  type: 'Point'
-  coordinates: Coordinates
-}
-
-interface Properties {
-  id: string
-  date: string
-  measurements: Record<string, number>
-  type: string
-}
-
-interface Feature {
-  type: 'Feature'
-  geometry: Geometry
-  properties: Properties
-}
-
-interface FeatureCollection {
-  type: 'FeatureCollection'
-  features: Feature[]
-}
-
 const typeLabels: Record<string, string> = {
   boje: 'Bojen Daten',
   labor: 'Labor-Daten',
@@ -58,14 +32,6 @@ export const Map = () => {
     'manuell',
   ])
 
-  if (!map) {
-    return (
-      <div className="relative w-screen h-[80vh]">
-        <div ref={mapContainerRef} className="w-full h-full" />
-      </div>
-    )
-  }
-
   const handleMarkerClick = (feature: Feature) => {
     setSelectedFeature(feature)
     setSidebarOpen(true)
@@ -81,14 +47,18 @@ export const Map = () => {
     }
   }
 
+  if (!map) {
+    return (
+      <div className="relative w-screen h-[80vh]" ref={mapContainerRef}></div>
+    )
+  }
+
   return (
-    <div className="relative w-screen h-[80vh]">
-      <div ref={mapContainerRef} className="w-full h-full relative">
-        <FilterPopover
-          onFilterChange={handleFilterChange}
-          onOpen={handleFilterOpen}
-        />
-      </div>
+    <div className="relative w-screen h-[80vh]" ref={mapContainerRef}>
+      <FilterPopover
+        onFilterChange={handleFilterChange}
+        onOpen={handleFilterOpen}
+      />
       {geojsonData.features
         .filter((feature) => filteredTypes.includes(feature.properties.type))
         .map((feature) => (
@@ -173,4 +143,30 @@ export const Map = () => {
       </Sidebar>
     </div>
   )
+}
+
+// GeoJSON types following the specification
+type Coordinates = [number, number, number]
+
+interface Geometry {
+  type: 'Point'
+  coordinates: Coordinates
+}
+
+interface Properties {
+  id: string
+  date: string
+  measurements: Record<string, number>
+  type: string
+}
+
+interface Feature {
+  type: 'Feature'
+  geometry: Geometry
+  properties: Properties
+}
+
+interface FeatureCollection {
+  type: 'FeatureCollection'
+  features: Feature[]
 }
