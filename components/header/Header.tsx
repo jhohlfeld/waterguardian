@@ -8,7 +8,7 @@ const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   return (
-    <header className="w-full bg-background text-gray-12 sticky top-0 z-10">
+    <header className="w-full bg-white text-gray-12 shadow-md sticky top-0 z-10">
       <nav className="flex justify-between items-center p-4 max-w-7xl mx-auto">
         {/* Logo */}
         <div className="flex items-center">
@@ -19,14 +19,8 @@ const Header: React.FC = () => {
 
         {/* Navigation Links */}
         <div className="hidden md:flex space-x-6 text-sm font-medium">
-          <Link href="/" className="hover:underline">
-            Home
-          </Link>
-          <Link href="/about" className="hover:underline">
+          <Link href="/about" className="hover:text-indigo-12">
             About
-          </Link>
-          <Link href="/privacy" className="hover:underline">
-            Impressum & Datenschutz
           </Link>
         </div>
 
@@ -50,18 +44,8 @@ const Header: React.FC = () => {
         <div className="md:hidden bg-background text-gray-12 p-4">
           <ul className="space-y-4 focus:outline-none">
             <li>
-              <Link href="/" onClick={() => setIsMenuOpen(false)}>
-                Home
-              </Link>
-            </li>
-            <li>
               <Link href="/about" onClick={() => setIsMenuOpen(false)}>
                 About
-              </Link>
-            </li>
-            <li>
-              <Link href="/privacy" onClick={() => setIsMenuOpen(false)}>
-                Impressum & Datenschutz
               </Link>
             </li>
           </ul>
