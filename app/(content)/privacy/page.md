@@ -1,34 +1,6 @@
-# Impressum
-
-Protohaus gGmbH  
-Nordstraße 40a  
-38106 Braunschweig
-
-**Vertreten durch:**  
-Chris Töppe
-
-## Kontakt
-
-Telefon: 053134896170  
-E-Mail: info@protohaus.org
-
-## Umsatzsteuer-ID
-
-Umsatzsteuer-Identifikationsnummer gemäß § 27 a Umsatzsteuergesetz:  
-DE 303 775 377
-
-## EU-Streitschlichtung
-
-Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit: [https://ec.europa.eu/consumers/odr/](https://ec.europa.eu/consumers/odr/).  
-Unsere E-Mail-Adresse finden Sie oben im Impressum.
-
-## Verbraucherstreitbeilegung/Universalschlichtungsstelle
-
-Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.
-
 # Datenschutzerklärung
 
-## 1\. Datenschutz auf einen Blick
+## 1 Datenschutz auf einen Blick
 
 ### Allgemeine Hinweise
 
@@ -56,7 +28,7 @@ Sie haben jederzeit das Recht, unentgeltlich Auskunft über Herkunft, Empfänger
 
 Hierzu sowie zu weiteren Fragen zum Thema Datenschutz können Sie sich jederzeit an uns wenden.
 
-## 2\. Hosting
+## 2 Hosting
 
 Wir hosten die Inhalte unserer Website in Europa, um den Datenschutzanforderungen bestmöglich gerecht zu werden.
 
@@ -64,7 +36,7 @@ Wir hosten die Inhalte unserer Website in Europa, um den Datenschutzanforderunge
 
 Wir haben einen Vertrag über Auftragsverarbeitung (AVV) zur Nutzung der Hosting-Dienste geschlossen. Hierbei handelt es sich um einen datenschutzrechtlich vorgeschriebenen Vertrag, der gewährleistet, dass personenbezogene Daten unserer Websitebesucher nur nach unseren Weisungen und unter Einhaltung der DSGVO verarbeitet werden.
 
-## 3\. Allgemeine Hinweise und Pflichtinformationen
+## 3 Allgemeine Hinweise und Pflichtinformationen
 
 ### Datenschutz
 
@@ -138,7 +110,7 @@ Diese Seite nutzt aus Sicherheitsgründen und zum Schutz der Übertragung vertra
 
 Wenn die SSL- bzw. TLS-Verschlüsselung aktiviert ist, können die Daten, die Sie an uns übermitteln, nicht von Dritten mitgelesen werden.
 
-## 4\. Datenerfassung auf dieser Website
+## 4 Datenerfassung auf dieser Website
 
 ### Server-Log-Dateien
 
@@ -163,7 +135,7 @@ Die Verarbeitung dieser Daten erfolgt auf Grundlage von Art. 6 Abs. 1 lit. b DSG
 
 Die von Ihnen an uns per Kontaktanfragen übersandten Daten verbleiben bei uns, bis Sie uns zur Löschung auffordern, Ihre Einwilligung zur Speicherung widerrufen oder der Zweck für die Datenspeicherung entfällt (z.B. nach abgeschlossener Bearbeitung Ihres Anliegens). Zwingende gesetzliche Bestimmungen - insbesondere gesetzliche Aufbewahrungsfristen - bleiben unberührt.
 
-## 5\. Kartenmaterial
+## 5 Kartenmaterial
 
 ### Nutzung von MapTiler
 
