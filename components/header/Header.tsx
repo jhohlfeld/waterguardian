@@ -18,8 +18,11 @@ const Header: React.FC = () => {
         </div>
 
         {/* Navigation Links */}
-        <div className="hidden md:flex space-x-6 text-sm font-medium">
-          <Link href="/about" className="hover:text-indigo-12">
+        <div className="hidden md:flex space-x-6 text-sm uppercase font-bold">
+          <Link
+            href="/about"
+            className="transition-all ease-in-out duration-300 hover:text-indigo-12 p-2 hover:tracking-wide"
+          >
             About
           </Link>
         </div>

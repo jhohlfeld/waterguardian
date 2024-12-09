@@ -3,11 +3,17 @@ import Link from 'next/link'
 const Footer: React.FC = () => {
   return (
     <footer className="w-full py-2 px-4 bg-background text-gray-12 text-center">
-      <div className="text-sm font-medium">
-        <Link href="/privacy" className="px-2 hover:text-indigo-12">
+      <div className="flex justify-center text-sm font-medium gap-x-1">
+        <Link
+          href="/privacy"
+          className="transition-all ease-in-out duration-300 p-2 hover:tracking-wide px-2 hover:text-indigo-12"
+        >
           Datenschutz
         </Link>
-        <Link href="/imprint" className="px-2 hover:text-indigo-12">
+        <Link
+          href="/imprint"
+          className="transition-all ease-in-out duration-300 p-2 hover:tracking-wide px-2 hover:text-indigo-12"
+        >
           Impressum
         </Link>
       </div>
