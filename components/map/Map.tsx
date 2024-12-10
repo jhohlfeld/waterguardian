@@ -3,7 +3,6 @@
 import 'maplibre-gl/dist/maplibre-gl.css'
 import { useState } from 'react'
 import { CustomMarker } from './CustomMarker'
-import geoData from './data/data.json'
 import { FilterPopover } from './FilterPopover'
 import { useMap } from './hooks'
 import { Sidebar } from './Sidebar'
@@ -15,9 +14,9 @@ const typeLabels: Record<string, string> = {
 }
 
 // Safely cast the imported data
-const geojsonData = geoData as unknown as FeatureCollection
+// const geojsonData = geoData as unknown as FeatureCollection
 
-export const Map = () => {
+export const Map = ({ data }: { data?: FeatureCollection }) => {
   const { mapContainerRef, map } = useMap({
     draggable: true,
     scrollZoom: false,
@@ -57,22 +56,23 @@ export const Map = () => {
         onFilterChange={handleFilterChange}
         onOpen={handleFilterOpen}
       />
-      {geojsonData.features
-        .filter((feature) => filteredTypes.includes(feature.properties.type))
-        .map((feature) => (
-          <CustomMarker
-            key={feature.properties.id}
-            map={map}
-            position={[
-              feature.geometry.coordinates[0],
-              feature.geometry.coordinates[1],
-            ]}
-            onClick={() => handleMarkerClick(feature)}
-            isSelected={
-              selectedFeature?.properties.id === feature.properties.id
-            }
-          />
-        ))}
+      {data &&
+        data.features
+          .filter((feature) => filteredTypes.includes(feature.properties.type))
+          .map((feature) => (
+            <CustomMarker
+              key={feature.properties.id}
+              map={map}
+              position={[
+                feature.geometry.coordinates[0],
+                feature.geometry.coordinates[1],
+              ]}
+              onClick={() => handleMarkerClick(feature)}
+              isSelected={
+                selectedFeature?.properties.id === feature.properties.id
+              }
+            />
+          ))}
       <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)}>
         {selectedFeature ? (
           <div className="space-y-6">
@@ -143,6 +143,8 @@ export const Map = () => {
   )
 }
 
+// todo: use @types/geojson
+
 // GeoJSON types following the specification
 type Coordinates = [number, number, number]
 
@@ -164,7 +166,7 @@ interface Feature {
   properties: Properties
 }
 
-interface FeatureCollection {
+export interface FeatureCollection {
   type: 'FeatureCollection'
   features: Feature[]
 }
