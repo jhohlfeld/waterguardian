@@ -109,8 +109,22 @@ async function fetchRangeFromWorksheet<T>(
   return values
 }
 
-export async function fetchWorksheet<T>(worksheetUrl: string): Promise<T> {
+export type WorksheetData = Array<Array<string | number>>
+
+// todo: implement - use @types/geojson
+type FeatureCollection = unknown
+
+function toFeatureCollection(data: WorksheetData): FeatureCollection {
+  // todo: implement worksheet data to geojson transformation
+  return data
+}
+
+export async function fetchWorksheet(
+  worksheetUrl: string,
+): Promise<FeatureCollection> {
   const { driveId, itemId } = await fetchShareItem(encodeShareUrl(worksheetUrl))
   const worksheetId = await fetchWorksheetId(driveId, itemId)
-  return fetchRangeFromWorksheet(driveId, itemId, worksheetId)
+  return toFeatureCollection(
+    await fetchRangeFromWorksheet<WorksheetData>(driveId, itemId, worksheetId),
+  )
 }
