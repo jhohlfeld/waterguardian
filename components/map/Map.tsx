@@ -47,19 +47,11 @@ export const Map = ({ data }: { data?: FeatureCollection }) => {
   }
 
   if (!map) {
-    return (
-      <div
-        className="relative w-screen h-[70vh] md:h-[80vh]"
-        ref={mapContainerRef}
-      ></div>
-    )
+    return <div className="flex-1 relative w-full" ref={mapContainerRef}></div>
   }
 
   return (
-    <div
-      className="relative w-screen h-[70vh] md:h-[80vh]"
-      ref={mapContainerRef}
-    >
+    <div className="flex-1 relative w-full" ref={mapContainerRef}>
       <FilterPopover
         onFilterChange={handleFilterChange}
         onOpen={handleFilterOpen}

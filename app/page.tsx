@@ -11,7 +11,7 @@ export default function Home() {
   }, [])
 
   return (
-    <main>
+    <main className="flex-grow flex">
       <Map data={data} />
     </main>
   )
