@@ -22,7 +22,7 @@ export default function RootLayout({
         className={cn(
           GeistSans.className,
           'antialiased radix-themes radix-themes-custom-fonts font-sans',
-          'min-h-screen flex flex-col', // Added flex layout
+          'min-h-screen flex flex-col',
         )}
         data-is-root-theme="true"
         data-accent-color="indigo"
