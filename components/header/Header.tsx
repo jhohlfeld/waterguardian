@@ -8,7 +8,7 @@ const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   return (
-    <header className="w-full bg-background text-gray-12 sticky top-0 z-10">
+    <header className="w-full bg-[--gray-1] text-[--gray-11] shadow-md sticky top-0 z-10">
       <nav className="flex justify-between items-center p-4 max-w-7xl mx-auto">
         {/* Logo */}
         <div className="flex items-center">
@@ -18,15 +18,12 @@ const Header: React.FC = () => {
         </div>
 
         {/* Navigation Links */}
-        <div className="hidden md:flex space-x-6 text-sm font-medium">
-          <Link href="/" className="hover:underline">
-            Home
-          </Link>
-          <Link href="/about" className="hover:underline">
+        <div className="hidden md:flex space-x-6 text-sm uppercase font-bold">
+          <Link
+            href="/about"
+            className="transition-all ease-in-out duration-300 hover:text-[--accent-12] p-2 hover:tracking-wide"
+          >
             About
-          </Link>
-          <Link href="/privacy" className="hover:underline">
-            Impressum & Datenschutz
           </Link>
         </div>
 
@@ -38,30 +35,24 @@ const Header: React.FC = () => {
             aria-label="Toggle navigation menu"
           >
             {/* Hamburger Icon */}
-            <span className="block w-6 h-0.5 border border-gray-12 mb-1"></span>
-            <span className="block w-6 h-0.5 border border-gray-12 mb-1"></span>
-            <span className="block w-6 h-0.5 border border-gray-12"></span>
+            <span className="block w-6 h-0.5 bg-[--gray-11] mb-1"></span>
+            <span className="block w-6 h-0.5 bg-[--gray-11] mb-1"></span>
+            <span className="block w-6 h-0.5 bg-[--gray-11]"></span>
           </button>
         </div>
       </nav>
 
       {/* Mobile Menu */}
       {isMenuOpen && (
-        <div className="md:hidden bg-background text-gray-12 p-4">
+        <div className="md:hidden bg-[--gray-1] text-[--gray-11] p-4">
           <ul className="space-y-4 focus:outline-none">
             <li>
-              <Link href="/" onClick={() => setIsMenuOpen(false)}>
-                Home
-              </Link>
-            </li>
-            <li>
-              <Link href="/about" onClick={() => setIsMenuOpen(false)}>
+              <Link
+                href="/about"
+                onClick={() => setIsMenuOpen(false)}
+                className="hover:text-[--indigo-11]"
+              >
                 About
-              </Link>
-            </li>
-            <li>
-              <Link href="/privacy" onClick={() => setIsMenuOpen(false)}>
-                Impressum & Datenschutz
               </Link>
             </li>
           </ul>

@@ -21,7 +21,8 @@ export default function RootLayout({
       <body
         className={cn(
           GeistSans.className,
-          'antialiased radix-themes radix-themes-custom-fonts font-sans h-screen overflow-y-auto',
+          'antialiased radix-themes radix-themes-custom-fonts font-sans',
+          'min-h-screen flex flex-col',
         )}
         data-is-root-theme="true"
         data-accent-color="indigo"

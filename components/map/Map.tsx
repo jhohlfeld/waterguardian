@@ -48,13 +48,11 @@ export const Map = () => {
   }
 
   if (!map) {
-    return (
-      <div className="relative w-screen h-[80vh]" ref={mapContainerRef}></div>
-    )
+    return <div className="flex-1 relative w-full" ref={mapContainerRef}></div>
   }
 
   return (
-    <div className="relative w-screen h-[80vh]" ref={mapContainerRef}>
+    <div className="flex-1 relative w-full" ref={mapContainerRef}>
       <FilterPopover
         onFilterChange={handleFilterChange}
         onOpen={handleFilterOpen}
@@ -79,28 +77,28 @@ export const Map = () => {
         {selectedFeature ? (
           <div className="space-y-6">
             <div>
-              <div className="text-sm font-semibold text-gray-10 mb-1">
+              <div className="text-sm font-semibold text-[--gray-10] mb-1">
                 Data Type
               </div>
-              <div className="text-gray-12">
+              <div className="text-[--gray-12]">
                 {typeLabels[selectedFeature.properties.type]}
               </div>
             </div>
 
             <div>
-              <div className="text-sm font-semibold text-gray-10 mb-1">
+              <div className="text-sm font-semibold text-[--gray-10] mb-1">
                 Location ID
               </div>
-              <div className="text-gray-12 font-mono">
+              <div className="text-[--gray-12] font-mono">
                 {selectedFeature.properties.id}
               </div>
             </div>
 
             <div>
-              <div className="text-sm font-semibold text-gray-10 mb-1">
+              <div className="text-sm font-semibold text-[--gray-10] mb-1">
                 Measurement Date
               </div>
-              <div className="text-gray-12">
+              <div className="text-[--gray-12]">
                 {new Date(selectedFeature.properties.date).toLocaleString(
                   'de-DE',
                   {
@@ -112,10 +110,10 @@ export const Map = () => {
             </div>
 
             <div>
-              <div className="text-sm font-semibold text-gray-10 mb-1">
+              <div className="text-sm font-semibold text-[--gray-10] mb-1">
                 Measurements
               </div>
-              <div className="bg-gray-2 rounded-lg p-4">
+              <div className="bg-[--gray-2] rounded-lg p-4">
                 <ul className="space-y-3">
                   {Object.entries(selectedFeature.properties.measurements).map(
                     ([key, value]) => (
@@ -123,12 +121,12 @@ export const Map = () => {
                         key={key}
                         className="flex items-center justify-between"
                       >
-                        <span className="text-gray-11">{key}</span>
+                        <span className="text-[--gray-11]">{key}</span>
                         <div className="flex items-center gap-2">
-                          <span className="text-gray-12 font-medium">
+                          <span className="text-[--gray-12] font-medium">
                             {value}
                           </span>
-                          <span className="text-sm text-gray-10">mg/L</span>
+                          <span className="text-sm text-[--gray-10]">mg/L</span>
                         </div>
                       </li>
                     ),
@@ -138,7 +136,7 @@ export const Map = () => {
             </div>
           </div>
         ) : (
-          <p className="text-gray-11">No data selected</p>
+          <p className="text-[--gray-11]">No data selected</p>
         )}
       </Sidebar>
     </div>
