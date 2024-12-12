@@ -2,6 +2,7 @@
 
 import { graphClientId, graphClientSecret, graphTenantId } from '@/config'
 import { encodeShareUrl } from '@/util/encodeShareUrl'
+import { Feature, FeatureCollection, Point } from 'geojson'
 import { createCache } from 'simple-in-memory-cache'
 
 const { set, get } = createCache<string>()
@@ -111,17 +112,138 @@ async function fetchRangeFromWorksheet<T>(
 
 export type WorksheetData = Array<Array<string | number>>
 
-// todo: implement - use @types/geojson
-type FeatureCollection = unknown
+interface MeasurementData {
+  [key: string]: number
+}
 
-function toFeatureCollection(data: WorksheetData): FeatureCollection {
-  // todo: implement worksheet data to geojson transformation
-  return data
+interface WaterGuardianProperties {
+  id: string
+  date: string
+  type: string
+  measurements: MeasurementData
+}
+
+type WaterGuardianFeature = Feature<Point, WaterGuardianProperties>
+
+function toFeatureCollection(
+  data: WorksheetData,
+): FeatureCollection<Point, WaterGuardianProperties> {
+  console.log('Raw worksheet data:', JSON.stringify(data, null, 2))
+
+  if (data.length < 3) {
+    // Need group headers, column headers, and at least one data row
+    console.log('Not enough data rows')
+    return {
+      type: 'FeatureCollection' as const,
+      features: [],
+    }
+  }
+
+  // Get column headers from second row
+  const columnHeaders = data[1].map((h) => String(h).trim())
+  console.log('Column headers:', columnHeaders)
+
+  // Find column indices for required fields
+  const lngIndex = columnHeaders.findIndex((h) => h.toLowerCase() === 'lng')
+  const latIndex = columnHeaders.findIndex((h) => h.toLowerCase() === 'lat')
+  const idIndex = columnHeaders.findIndex((h) => h.toLowerCase() === 'id')
+  const dateIndex = columnHeaders.findIndex((h) => h.toLowerCase() === 'date')
+  const typeIndex = columnHeaders.findIndex((h) => h.toLowerCase() === 'type')
+
+  console.log('Required column indices:', {
+    lng: lngIndex,
+    lat: latIndex,
+    id: idIndex,
+    date: dateIndex,
+    type: typeIndex,
+  })
+
+  // Find measurement columns (Copper, Lead, Nickel, Mercury, ph)
+  const measurementColumns = columnHeaders.reduce<
+    { name: string; index: number }[]
+  >((acc, header, index) => {
+    const headerLower = header.toLowerCase()
+    if (header && !['lng', 'lat', 'id', 'date', 'type'].includes(headerLower)) {
+      return [...acc, { name: header, index }]
+    }
+    return acc
+  }, [])
+
+  console.log('Measurement columns:', measurementColumns)
+
+  // Process data rows (skip first two rows - group headers and column headers)
+  const features = data
+    .slice(2)
+    .map((row, rowIndex) => {
+      // Get coordinates and properties
+      const lng = Number(row[lngIndex])
+      const lat = Number(row[latIndex])
+      const id = String(row[idIndex])
+      const date = String(row[dateIndex])
+      const type = String(row[typeIndex])
+
+      console.log(`Row ${rowIndex + 1} base values:`, {
+        lng,
+        lat,
+        id,
+        date,
+        type,
+      })
+
+      // Extract measurements
+      const measurements: MeasurementData = {}
+      measurementColumns.forEach(({ name, index }) => {
+        const value = row[index]
+        if (value !== undefined && value !== '') {
+          const numValue = Number(value)
+          if (!isNaN(numValue)) {
+            measurements[name] = numValue
+          }
+        }
+      })
+
+      console.log(`Row ${rowIndex + 1} measurements:`, measurements)
+
+      // Validate coordinates
+      if (isNaN(lng) || isNaN(lat)) {
+        console.warn(`Invalid coordinates for id ${id}: [${lng}, ${lat}]`)
+        return null
+      }
+
+      const feature: WaterGuardianFeature = {
+        type: 'Feature',
+        geometry: {
+          type: 'Point',
+          coordinates: [lng, lat],
+        },
+        properties: {
+          id,
+          date,
+          type,
+          measurements,
+        },
+      }
+
+      console.log(
+        `Row ${rowIndex + 1} feature:`,
+        JSON.stringify(feature, null, 2),
+      )
+      return feature
+    })
+    .filter((feature): feature is WaterGuardianFeature => feature !== null)
+
+  const result: FeatureCollection<Point, WaterGuardianProperties> = {
+    type: 'FeatureCollection',
+    features,
+  }
+
+  console.log('Final GeoJSON:', JSON.stringify(result, null, 2))
+  return result
 }
 
 export async function fetchWorksheet(
   worksheetUrl: string,
-): Promise<FeatureCollection> {
+): Promise<FeatureCollection<Point, WaterGuardianProperties>> {
   const { driveId, itemId } = await fetchShareItem(encodeShareUrl(worksheetUrl))
   const worksheetId = await fetchWorksheetId(driveId, itemId)
   return toFeatureCollection(
