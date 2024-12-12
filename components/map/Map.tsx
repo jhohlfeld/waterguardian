@@ -1,5 +1,6 @@
 'use client'
 
+import { Feature, FeatureCollection, Point } from 'geojson'
 import 'maplibre-gl/dist/maplibre-gl.css'
 import { useState } from 'react'
 import { CustomMarker } from './CustomMarker'
@@ -13,17 +14,32 @@ const typeLabels: Record<string, string> = {
   manuell: 'Citizen Science Daten',
 }
 
-// Safely cast the imported data
-// const geojsonData = geoData as unknown as FeatureCollection
+interface WaterGuardianProperties {
+  id: string
+  date: string
+  type: string
+  measurements: Record<string, number>
+}
 
-export const Map = ({ data }: { data?: FeatureCollection }) => {
+type WaterGuardianFeature = Feature<Point, WaterGuardianProperties>
+export type WaterGuardianFeatureCollection = FeatureCollection<
+  Point,
+  WaterGuardianProperties
+>
+
+interface MapProps {
+  data?: WaterGuardianFeatureCollection
+}
+
+export const Map = ({ data }: MapProps) => {
   const { mapContainerRef, map } = useMap({
     draggable: true,
-    scrollZoom: false,
-    keyboard: false,
+    scrollZoom: true,
+    keyboard: true,
   })
 
-  const [selectedFeature, setSelectedFeature] = useState<Feature | null>(null)
+  const [selectedFeature, setSelectedFeature] =
+    useState<WaterGuardianFeature | null>(null)
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [filteredTypes, setFilteredTypes] = useState<string[]>([
     'boje',
@@ -31,7 +47,7 @@ export const Map = ({ data }: { data?: FeatureCollection }) => {
     'manuell',
   ])
 
-  const handleMarkerClick = (feature: Feature) => {
+  const handleMarkerClick = (feature: WaterGuardianFeature) => {
     setSelectedFeature(feature)
     setSidebarOpen(true)
   }
@@ -56,23 +72,22 @@ export const Map = ({ data }: { data?: FeatureCollection }) => {
         onFilterChange={handleFilterChange}
         onOpen={handleFilterOpen}
       />
-      {data &&
-        data.features
-          .filter((feature) => filteredTypes.includes(feature.properties.type))
-          .map((feature) => (
-            <CustomMarker
-              key={feature.properties.id}
-              map={map}
-              position={[
-                feature.geometry.coordinates[0],
-                feature.geometry.coordinates[1],
-              ]}
-              onClick={() => handleMarkerClick(feature)}
-              isSelected={
-                selectedFeature?.properties.id === feature.properties.id
-              }
-            />
-          ))}
+      {data?.features
+        .filter((feature) => filteredTypes.includes(feature.properties.type))
+        .map((feature) => (
+          <CustomMarker
+            key={feature.properties.id}
+            map={map}
+            position={[
+              feature.geometry.coordinates[0],
+              feature.geometry.coordinates[1],
+            ]}
+            onClick={() => handleMarkerClick(feature)}
+            isSelected={
+              selectedFeature?.properties.id === feature.properties.id
+            }
+          />
+        ))}
       <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)}>
         {selectedFeature ? (
           <div className="space-y-6">
@@ -141,32 +156,4 @@ export const Map = ({ data }: { data?: FeatureCollection }) => {
       </Sidebar>
     </div>
   )
-}
-
-// todo: use @types/geojson
-
-// GeoJSON types following the specification
-type Coordinates = [number, number, number]
-
-interface Geometry {
-  type: 'Point'
-  coordinates: Coordinates
-}
-
-interface Properties {
-  id: string
-  date: string
-  measurements: Record<string, number>
-  type: string
-}
-
-interface Feature {
-  type: 'Feature'
-  geometry: Geometry
-  properties: Properties
-}
-
-export interface FeatureCollection {
-  type: 'FeatureCollection'
-  features: Feature[]
 }
