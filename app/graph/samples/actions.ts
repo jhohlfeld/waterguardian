@@ -113,7 +113,7 @@ async function fetchRangeFromWorksheet<T>(
 export type WorksheetData = Array<Array<string | number>>
 
 interface MeasurementData {
-  value: number
+  value: number | string
   unit: string
   group: string
 }
@@ -134,9 +134,13 @@ interface ColumnGroup {
   endIndex: number
 }
 
+// Required column names (case-insensitive)
+const REQUIRED_COLUMNS = ['lng', 'lat', 'id', 'date', 'type']
+
 function parseColumnGroups(groupRow: Array<string | number>): ColumnGroup[] {
   const groups: ColumnGroup[] = []
   let currentGroup: ColumnGroup | null = null
+  let lastNonEmptyValue = ''
 
   for (let index = 0; index < groupRow.length; index++) {
     const cellValue = String(groupRow[index]).trim()
@@ -153,9 +157,17 @@ function parseColumnGroups(groupRow: Array<string | number>): ColumnGroup[] {
         startIndex: index,
         endIndex: index,
       }
+      lastNonEmptyValue = cellValue
     } else if (currentGroup) {
       // Extend current group
       currentGroup.endIndex = index
+    } else if (lastNonEmptyValue) {
+      // Create new group with last non-empty value for columns without a group header
+      currentGroup = {
+        name: lastNonEmptyValue,
+        startIndex: index,
+        endIndex: index,
+      }
     }
   }
 
@@ -187,18 +199,31 @@ function toFeatureCollection(
   const unitRow = data[2].map((u) => String(u).trim())
 
   // Find required field indices
-  const lngIndex = columnHeaders.findIndex((h) => h.toLowerCase() === 'lng')
-  const latIndex = columnHeaders.findIndex((h) => h.toLowerCase() === 'lat')
-  const idIndex = columnHeaders.findIndex((h) => h.toLowerCase() === 'id')
-  const dateIndex = columnHeaders.findIndex((h) => h.toLowerCase() === 'date')
-  const typeIndex = columnHeaders.findIndex((h) => h.toLowerCase() === 'type')
+  const requiredIndices = REQUIRED_COLUMNS.reduce<Record<string, number>>(
+    (acc, col) => {
+      const index = columnHeaders.findIndex(
+        (h) => h.toLowerCase() === col.toLowerCase(),
+      )
+      if (index === -1) {
+        throw new Error(`Required column "${col}" not found in worksheet`)
+      }
+      acc[col] = index
+      return acc
+    },
+    {},
+  )
 
   // Find measurement columns with their units and groups
   const measurementColumns = columnHeaders.reduce<
     { name: string; index: number; unit: string; group: string }[]
   >((acc, header, index) => {
-    const headerLower = header.toLowerCase()
-    if (header && !['lng', 'lat', 'id', 'date', 'type'].includes(headerLower)) {
+    // Skip required columns and empty headers
+    if (
+      header &&
+      !REQUIRED_COLUMNS.some(
+        (col) => col.toLowerCase() === header.toLowerCase(),
+      )
+    ) {
       // Find which group this column belongs to
       const group = columnGroups.find(
         (g) => index >= g.startIndex && index <= g.endIndex,
@@ -208,7 +233,7 @@ function toFeatureCollection(
         {
           name: header,
           index,
-          unit: unitRow[index],
+          unit: unitRow[index] || '',
           group: group?.name || 'Other',
         },
       ]
@@ -221,11 +246,11 @@ function toFeatureCollection(
     .slice(3)
     .map((row) => {
       // Get coordinates and properties
-      const lng = Number(row[lngIndex])
-      const lat = Number(row[latIndex])
-      const id = String(row[idIndex])
-      const date = String(row[dateIndex])
-      const type = String(row[typeIndex])
+      const lng = Number(row[requiredIndices.lng])
+      const lat = Number(row[requiredIndices.lat])
+      const id = String(row[requiredIndices.id])
+      const date = String(row[requiredIndices.date])
+      const type = String(row[requiredIndices.type])
 
       // Extract measurements with units and groups
       const measurements: Record<string, MeasurementData> = {}
@@ -234,6 +259,7 @@ function toFeatureCollection(
       measurementColumns.forEach(({ name, index, unit, group }) => {
         const value = row[index]
         if (value !== undefined && value !== '') {
+          // Try to convert to number first
           const numValue = Number(value)
           if (!isNaN(numValue)) {
             measurements[name] = {
@@ -241,8 +267,15 @@ function toFeatureCollection(
               unit,
               group,
             }
-            measurementGroups.add(group)
+          } else {
+            // If not a number, store as string
+            measurements[name] = {
+              value: String(value),
+              unit,
+              group,
+            }
           }
+          measurementGroups.add(group)
         }
       })
 

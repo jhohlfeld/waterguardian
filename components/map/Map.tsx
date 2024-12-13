@@ -1,8 +1,10 @@
 'use client'
 
+import { ChevronDownIcon } from '@radix-ui/react-icons'
 import { Feature, FeatureCollection, Point } from 'geojson'
 import 'maplibre-gl/dist/maplibre-gl.css'
 import { useState } from 'react'
+import { cn } from '../../util/cn'
 import { CustomMarker } from './CustomMarker'
 import { FilterPopover } from './FilterPopover'
 import { useMap } from './hooks'
@@ -15,7 +17,7 @@ const typeLabels: Record<string, string> = {
 }
 
 interface MeasurementData {
-  value: number
+  value: number | string
   unit: string
   group: string
 }
@@ -38,6 +40,72 @@ interface MapProps {
   data?: WaterGuardianFeatureCollection
 }
 
+interface CollapsibleGroupProps {
+  group: string
+  measurements: Array<{ name: string; measurement: MeasurementData }>
+  isOpen: boolean
+  onToggle: () => void
+}
+
+const CollapsibleGroup = ({
+  group,
+  measurements,
+  isOpen,
+  onToggle,
+}: CollapsibleGroupProps) => {
+  return (
+    <div className="space-y-2">
+      <button
+        onClick={onToggle}
+        className={cn(
+          'flex items-center justify-between w-full',
+          'text-sm font-semibold text-[--gray-10]',
+          'hover:text-[--gray-12] transition-colors',
+        )}
+      >
+        <span>{group}</span>
+        <ChevronDownIcon
+          className={cn(
+            'text-[--accent-10] transition-transform duration-300',
+            isOpen ? 'rotate-180' : '',
+          )}
+        />
+      </button>
+      <div
+        className={cn(
+          'overflow-hidden',
+          'duration-300',
+          isOpen
+            ? 'h-auto animate-in fade-in slide-in-from-top-2'
+            : 'h-0 animate-out fade-out slide-out-to-top-2',
+        )}
+      >
+        <div className="bg-[--gray-2] rounded-lg p-4">
+          <ul className="space-y-3">
+            {measurements.map(({ name, measurement }) => (
+              <li key={name} className="flex items-center justify-between">
+                <span className="text-[--gray-11]">{name}</span>
+                <div className="flex items-center gap-2">
+                  <span className="text-[--gray-12] font-medium">
+                    {typeof measurement.value === 'number'
+                      ? measurement.value.toLocaleString('de-DE')
+                      : measurement.value}
+                  </span>
+                  {measurement.unit && (
+                    <span className="text-sm text-[--gray-10]">
+                      {measurement.unit}
+                    </span>
+                  )}
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export const Map = ({ data }: MapProps) => {
   const { mapContainerRef, map } = useMap({
     draggable: true,
@@ -53,10 +121,13 @@ export const Map = ({ data }: MapProps) => {
     'labor',
     'manuell',
   ])
+  const [openGroups, setOpenGroups] = useState<string[]>([])
 
   const handleMarkerClick = (feature: WaterGuardianFeature) => {
     setSelectedFeature(feature)
     setSidebarOpen(true)
+    // Open all groups by default when selecting a new feature
+    setOpenGroups(feature.properties.measurementGroups)
   }
 
   const handleFilterChange = (selectedTypes: string[]) => {
@@ -67,6 +138,14 @@ export const Map = ({ data }: MapProps) => {
     if (sidebarOpen) {
       setSidebarOpen(false)
     }
+  }
+
+  const toggleGroup = (group: string) => {
+    setOpenGroups((current) =>
+      current.includes(group)
+        ? current.filter((g) => g !== group)
+        : [...current, group],
+    )
   }
 
   if (!map) {
@@ -115,7 +194,8 @@ export const Map = ({ data }: MapProps) => {
                 Data Type
               </div>
               <div className="text-[--gray-12]">
-                {typeLabels[selectedFeature.properties.type]}
+                {typeLabels[selectedFeature.properties.type] ||
+                  selectedFeature.properties.type}
               </div>
             </div>
 
@@ -146,31 +226,13 @@ export const Map = ({ data }: MapProps) => {
             {/* Measurement Groups */}
             {Object.entries(groupedMeasurements).map(
               ([group, measurements]) => (
-                <div key={group} className="space-y-2">
-                  <div className="text-sm font-semibold text-[--gray-10]">
-                    {group}
-                  </div>
-                  <div className="bg-[--gray-2] rounded-lg p-4">
-                    <ul className="space-y-3">
-                      {measurements.map(({ name, measurement }) => (
-                        <li
-                          key={name}
-                          className="flex items-center justify-between"
-                        >
-                          <span className="text-[--gray-11]">{name}</span>
-                          <div className="flex items-center gap-2">
-                            <span className="text-[--gray-12] font-medium">
-                              {measurement.value}
-                            </span>
-                            <span className="text-sm text-[--gray-10]">
-                              {measurement.unit}
-                            </span>
-                          </div>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
+                <CollapsibleGroup
+                  key={group}
+                  group={group}
+                  measurements={measurements}
+                  isOpen={openGroups.includes(group)}
+                  onToggle={() => toggleGroup(group)}
+                />
               ),
             )}
           </div>
