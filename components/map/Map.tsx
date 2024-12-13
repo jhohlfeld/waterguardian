@@ -14,11 +14,16 @@ const typeLabels: Record<string, string> = {
   manuell: 'Citizen Science Daten',
 }
 
+interface MeasurementData {
+  value: number
+  unit: string
+}
+
 interface WaterGuardianProperties {
   id: string
   date: string
   type: string
-  measurements: Record<string, number>
+  measurements: Record<string, MeasurementData>
 }
 
 type WaterGuardianFeature = Feature<Point, WaterGuardianProperties>
@@ -131,7 +136,7 @@ export const Map = ({ data }: MapProps) => {
               <div className="bg-[--gray-2] rounded-lg p-4">
                 <ul className="space-y-3">
                   {Object.entries(selectedFeature.properties.measurements).map(
-                    ([key, value]) => (
+                    ([key, measurement]) => (
                       <li
                         key={key}
                         className="flex items-center justify-between"
@@ -139,9 +144,11 @@ export const Map = ({ data }: MapProps) => {
                         <span className="text-[--gray-11]">{key}</span>
                         <div className="flex items-center gap-2">
                           <span className="text-[--gray-12] font-medium">
-                            {value}
+                            {measurement.value}
                           </span>
-                          <span className="text-sm text-[--gray-10]">mg/L</span>
+                          <span className="text-sm text-[--gray-10]">
+                            {measurement.unit}
+                          </span>
                         </div>
                       </li>
                     ),
