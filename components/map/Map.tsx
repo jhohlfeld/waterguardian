@@ -17,6 +17,7 @@ const typeLabels: Record<string, string> = {
 interface MeasurementData {
   value: number
   unit: string
+  group: string
 }
 
 interface WaterGuardianProperties {
@@ -24,6 +25,7 @@ interface WaterGuardianProperties {
   date: string
   type: string
   measurements: Record<string, MeasurementData>
+  measurementGroups: string[]
 }
 
 type WaterGuardianFeature = Feature<Point, WaterGuardianProperties>
@@ -70,6 +72,18 @@ export const Map = ({ data }: MapProps) => {
   if (!map) {
     return <div className="flex-1 relative w-full" ref={mapContainerRef}></div>
   }
+
+  // Group measurements by their category
+  const groupedMeasurements = selectedFeature
+    ? selectedFeature.properties.measurementGroups.reduce<
+        Record<string, Array<{ name: string; measurement: MeasurementData }>>
+      >((acc, group) => {
+        acc[group] = Object.entries(selectedFeature.properties.measurements)
+          .filter(([, measurement]) => measurement.group === group)
+          .map(([name, measurement]) => ({ name, measurement }))
+        return acc
+      }, {})
+    : {}
 
   return (
     <div className="flex-1 relative w-full" ref={mapContainerRef}>
@@ -129,33 +143,36 @@ export const Map = ({ data }: MapProps) => {
               </div>
             </div>
 
-            <div>
-              <div className="text-sm font-semibold text-[--gray-10] mb-1">
-                Measurements
-              </div>
-              <div className="bg-[--gray-2] rounded-lg p-4">
-                <ul className="space-y-3">
-                  {Object.entries(selectedFeature.properties.measurements).map(
-                    ([key, measurement]) => (
-                      <li
-                        key={key}
-                        className="flex items-center justify-between"
-                      >
-                        <span className="text-[--gray-11]">{key}</span>
-                        <div className="flex items-center gap-2">
-                          <span className="text-[--gray-12] font-medium">
-                            {measurement.value}
-                          </span>
-                          <span className="text-sm text-[--gray-10]">
-                            {measurement.unit}
-                          </span>
-                        </div>
-                      </li>
-                    ),
-                  )}
-                </ul>
-              </div>
-            </div>
+            {/* Measurement Groups */}
+            {Object.entries(groupedMeasurements).map(
+              ([group, measurements]) => (
+                <div key={group} className="space-y-2">
+                  <div className="text-sm font-semibold text-[--gray-10]">
+                    {group}
+                  </div>
+                  <div className="bg-[--gray-2] rounded-lg p-4">
+                    <ul className="space-y-3">
+                      {measurements.map(({ name, measurement }) => (
+                        <li
+                          key={name}
+                          className="flex items-center justify-between"
+                        >
+                          <span className="text-[--gray-11]">{name}</span>
+                          <div className="flex items-center gap-2">
+                            <span className="text-[--gray-12] font-medium">
+                              {measurement.value}
+                            </span>
+                            <span className="text-sm text-[--gray-10]">
+                              {measurement.unit}
+                            </span>
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              ),
+            )}
           </div>
         ) : (
           <p className="text-[--gray-11]">No data selected</p>

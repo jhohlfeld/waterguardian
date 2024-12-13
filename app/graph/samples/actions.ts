@@ -115,6 +115,7 @@ export type WorksheetData = Array<Array<string | number>>
 interface MeasurementData {
   value: number
   unit: string
+  group: string
 }
 
 interface WaterGuardianProperties {
@@ -122,15 +123,55 @@ interface WaterGuardianProperties {
   date: string
   type: string
   measurements: Record<string, MeasurementData>
+  measurementGroups: string[]
 }
 
 type WaterGuardianFeature = Feature<Point, WaterGuardianProperties>
+
+interface ColumnGroup {
+  name: string
+  startIndex: number
+  endIndex: number
+}
+
+function parseColumnGroups(groupRow: Array<string | number>): ColumnGroup[] {
+  const groups: ColumnGroup[] = []
+  let currentGroup: ColumnGroup | null = null
+
+  for (let index = 0; index < groupRow.length; index++) {
+    const cellValue = String(groupRow[index]).trim()
+
+    if (cellValue) {
+      // End previous group if exists
+      if (currentGroup) {
+        currentGroup.endIndex = index - 1
+        groups.push(currentGroup)
+      }
+      // Start new group
+      currentGroup = {
+        name: cellValue,
+        startIndex: index,
+        endIndex: index,
+      }
+    } else if (currentGroup) {
+      // Extend current group
+      currentGroup.endIndex = index
+    }
+  }
+
+  // Add last group if exists
+  if (currentGroup) {
+    currentGroup.endIndex = groupRow.length - 1
+    groups.push(currentGroup)
+  }
+
+  return groups
+}
 
 function toFeatureCollection(
   data: WorksheetData,
 ): FeatureCollection<Point, WaterGuardianProperties> {
   if (data.length < 4) {
-    // Need group headers, column headers, units row, and at least one data row
     console.log('Not enough data rows')
     return {
       type: 'FeatureCollection' as const,
@@ -138,29 +179,44 @@ function toFeatureCollection(
     }
   }
 
-  // Get column headers from second row and units from third row
+  // Parse column groups from first row
+  const columnGroups = parseColumnGroups(data[0])
+
+  // Get column headers and units
   const columnHeaders = data[1].map((h) => String(h).trim())
   const unitRow = data[2].map((u) => String(u).trim())
 
-  // Find column indices for required fields
+  // Find required field indices
   const lngIndex = columnHeaders.findIndex((h) => h.toLowerCase() === 'lng')
   const latIndex = columnHeaders.findIndex((h) => h.toLowerCase() === 'lat')
   const idIndex = columnHeaders.findIndex((h) => h.toLowerCase() === 'id')
   const dateIndex = columnHeaders.findIndex((h) => h.toLowerCase() === 'date')
   const typeIndex = columnHeaders.findIndex((h) => h.toLowerCase() === 'type')
 
-  // Find measurement columns with their units
+  // Find measurement columns with their units and groups
   const measurementColumns = columnHeaders.reduce<
-    { name: string; index: number; unit: string }[]
+    { name: string; index: number; unit: string; group: string }[]
   >((acc, header, index) => {
     const headerLower = header.toLowerCase()
     if (header && !['lng', 'lat', 'id', 'date', 'type'].includes(headerLower)) {
-      return [...acc, { name: header, index, unit: unitRow[index] }]
+      // Find which group this column belongs to
+      const group = columnGroups.find(
+        (g) => index >= g.startIndex && index <= g.endIndex,
+      )
+      return [
+        ...acc,
+        {
+          name: header,
+          index,
+          unit: unitRow[index],
+          group: group?.name || 'Other',
+        },
+      ]
     }
     return acc
   }, [])
 
-  // Process data rows (skip first three rows - group headers, column headers, and units)
+  // Process data rows
   const features = data
     .slice(3)
     .map((row) => {
@@ -171,17 +227,21 @@ function toFeatureCollection(
       const date = String(row[dateIndex])
       const type = String(row[typeIndex])
 
-      // Extract measurements with units
+      // Extract measurements with units and groups
       const measurements: Record<string, MeasurementData> = {}
-      measurementColumns.forEach(({ name, index, unit }) => {
+      const measurementGroups = new Set<string>()
+
+      measurementColumns.forEach(({ name, index, unit, group }) => {
         const value = row[index]
         if (value !== undefined && value !== '') {
           const numValue = Number(value)
           if (!isNaN(numValue)) {
             measurements[name] = {
               value: numValue,
-              unit: unit || '',
+              unit,
+              group,
             }
+            measurementGroups.add(group)
           }
         }
       })
@@ -203,6 +263,7 @@ function toFeatureCollection(
           date,
           type,
           measurements,
+          measurementGroups: Array.from(measurementGroups),
         },
       }
 
