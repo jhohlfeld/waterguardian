@@ -1,16 +1,19 @@
 'use client'
 
-import { Map, type WaterGuardianFeatureCollection } from '@/components/map/Map'
+import { Map } from '@/components/map/Map'
 import { useEffect, useState } from 'react'
+import { Waterguardian } from './graph/samples/types'
 
 export default function Home() {
-  const [data, setData] = useState<WaterGuardianFeatureCollection | undefined>()
+  const [data, setData] = useState<
+    Waterguardian.FeatureCollection | undefined
+  >()
 
   useEffect(() => {
     fetch('/graph/samples')
       .then(
         (response) =>
-          response.json() as Promise<WaterGuardianFeatureCollection>,
+          response.json() as Promise<Waterguardian.FeatureCollection>,
       )
       .then((featureCollection) => setData(featureCollection))
       .catch((error) => console.error('Error fetching data:', error))

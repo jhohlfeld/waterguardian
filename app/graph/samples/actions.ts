@@ -2,8 +2,8 @@
 
 import { graphClientId, graphClientSecret, graphTenantId } from '@/config'
 import { encodeShareUrl } from '@/util/encodeShareUrl'
-import { Feature, FeatureCollection, Point } from 'geojson'
 import { createCache } from 'simple-in-memory-cache'
+import { WorksheetData } from './types'
 
 const { set, get } = createCache<string>()
 
@@ -110,118 +110,10 @@ async function fetchRangeFromWorksheet<T>(
   return values
 }
 
-export type WorksheetData = Array<Array<string | number>>
-
-interface MeasurementData {
-  value: number
-  unit: string
-}
-
-interface WaterGuardianProperties {
-  id: string
-  date: string
-  type: string
-  measurements: Record<string, MeasurementData>
-}
-
-type WaterGuardianFeature = Feature<Point, WaterGuardianProperties>
-
-function toFeatureCollection(
-  data: WorksheetData,
-): FeatureCollection<Point, WaterGuardianProperties> {
-  if (data.length < 4) {
-    // Need group headers, column headers, units row, and at least one data row
-    console.log('Not enough data rows')
-    return {
-      type: 'FeatureCollection' as const,
-      features: [],
-    }
-  }
-
-  // Get column headers from second row and units from third row
-  const columnHeaders = data[1].map((h) => String(h).trim())
-  const unitRow = data[2].map((u) => String(u).trim())
-
-  // Find column indices for required fields
-  const lngIndex = columnHeaders.findIndex((h) => h.toLowerCase() === 'lng')
-  const latIndex = columnHeaders.findIndex((h) => h.toLowerCase() === 'lat')
-  const idIndex = columnHeaders.findIndex((h) => h.toLowerCase() === 'id')
-  const dateIndex = columnHeaders.findIndex((h) => h.toLowerCase() === 'date')
-  const typeIndex = columnHeaders.findIndex((h) => h.toLowerCase() === 'type')
-
-  // Find measurement columns with their units
-  const measurementColumns = columnHeaders.reduce<
-    { name: string; index: number; unit: string }[]
-  >((acc, header, index) => {
-    const headerLower = header.toLowerCase()
-    if (header && !['lng', 'lat', 'id', 'date', 'type'].includes(headerLower)) {
-      return [...acc, { name: header, index, unit: unitRow[index] }]
-    }
-    return acc
-  }, [])
-
-  // Process data rows (skip first three rows - group headers, column headers, and units)
-  const features = data
-    .slice(3)
-    .map((row) => {
-      // Get coordinates and properties
-      const lng = Number(row[lngIndex])
-      const lat = Number(row[latIndex])
-      const id = String(row[idIndex])
-      const date = String(row[dateIndex])
-      const type = String(row[typeIndex])
-
-      // Extract measurements with units
-      const measurements: Record<string, MeasurementData> = {}
-      measurementColumns.forEach(({ name, index, unit }) => {
-        const value = row[index]
-        if (value !== undefined && value !== '') {
-          const numValue = Number(value)
-          if (!isNaN(numValue)) {
-            measurements[name] = {
-              value: numValue,
-              unit: unit || '',
-            }
-          }
-        }
-      })
-
-      // Validate coordinates
-      if (isNaN(lng) || isNaN(lat)) {
-        console.warn(`Invalid coordinates for id ${id}: [${lng}, ${lat}]`)
-        return null
-      }
-
-      const feature: WaterGuardianFeature = {
-        type: 'Feature',
-        geometry: {
-          type: 'Point',
-          coordinates: [lng, lat],
-        },
-        properties: {
-          id,
-          date,
-          type,
-          measurements,
-        },
-      }
-
-      return feature
-    })
-    .filter((feature): feature is WaterGuardianFeature => feature !== null)
-
-  return {
-    type: 'FeatureCollection',
-    features,
-  }
-}
-
 export async function fetchWorksheet(
   worksheetUrl: string,
-): Promise<FeatureCollection<Point, WaterGuardianProperties>> {
+): Promise<WorksheetData> {
   const { driveId, itemId } = await fetchShareItem(encodeShareUrl(worksheetUrl))
   const worksheetId = await fetchWorksheetId(driveId, itemId)
-  return toFeatureCollection(
-    await fetchRangeFromWorksheet<WorksheetData>(driveId, itemId, worksheetId),
-  )
+  return fetchRangeFromWorksheet(driveId, itemId, worksheetId)
 }
