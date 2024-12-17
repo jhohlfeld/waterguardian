@@ -1,0 +1,239 @@
+// Bun Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`toMapData should transform worksheet to map data 1`] = `
+{
+  "features": [
+    {
+      "geometry": {
+        "coordinates": [
+          10.523,
+          52.256,
+        ],
+        "type": "Point",
+      },
+      "properties": {
+        "date": "2024-12-31T14:00:00",
+        "id": 1,
+        "measurements": {
+          "boje akku": {
+            "unit": "%",
+            "value": 21,
+          },
+          "conductivity": {
+            "unit": "µs/cm",
+            "value": 2,
+          },
+          "copper": {
+            "unit": "mg/l",
+            "value": 0.1,
+          },
+          'last calibration": {
+            "unit": "date",
+            "value": 45657,
+          },
+          "lead": {
+            "unit": "mg/l",
+            "value": 0.3,
+          },
+          "mercury": {
+            "unit": "mg/l",
+            "value": 0.1,
+          },
+          "nickel": {
+            "unit": "mg/l",
+            "value": 0.2,
+          },
+          "ph": {
+            "unit": "",
+            "value": 2,
+          },
+        },
+        "type": "boje",
+      },
+      "type": "Feature",
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          10.516,
+          52.272,
+        ],
+        "type": "Point",
+      },
+      "properties": {
+        "date": "2024-12-31T14:00:00",
+        "id": 2,
+        "measurements": {
+          "conductivity": {
+            "unit": "µs/cm",
+            "value": 100,
+          },
+          "copper": {
+            "unit": "mg/l",
+            "value": 0.2,
+          },
+          "lead": {
+            "unit": "mg/l",
+            "value": 0.7,
+          },
+          "mercury": {
+            "unit": "mg/l",
+            "value": 0.4,
+          },
+          "nickel": {
+            "unit": "mg/l",
+            "value": 0.8,
+          },
+          "ph": {
+            "unit": "",
+            "value": 23,
+          },
+        },
+        "type": "manuell",
+      },
+      "type": "Feature",
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          10.511,
+          52.267,
+        ],
+        "type": "Point",
+      },
+      "properties": {
+        "date": "2024-12-31T14:00:00",
+        "id": 3,
+        "measurements": {
+          "conductivity": {
+            "unit": "µs/cm",
+            "value": 3,
+          },
+          "copper": {
+            "unit": "mg/l",
+            "value": 0.32,
+          },
+          "lead": {
+            "unit": "mg/l",
+            "value": 0.7,
+          },
+          "nickel": {
+            "unit": "mg/l",
+            "value": 0.8,
+          },
+        },
+        "type": "labor",
+      },
+      "type": "Feature",
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          10.512,
+          52.288,
+        ],
+        "type": "Point",
+      },
+      "properties": {
+        "date": "2024-12-31T14:00:00",
+        "id": 4,
+        "measurements": {
+          "boje akku": {
+            "unit": "%",
+            "value": 97,
+          },
+          "copper": {
+            "unit": "mg/l",
+            "value": 0.42,
+          },
+          "lead": {
+            "unit": "mg/l",
+            "value": 0.4,
+          },
+          "mercury": {
+            "unit": "mg/l",
+            "value": 0.3,
+          },
+          "nickel": {
+            "unit": "mg/l",
+            "value": 0.5,
+          },
+        },
+        "type": "boje",
+      },
+      "type": "Feature",
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          10.512561,
+          52.280169,
+        ],
+        "type": "Point",
+      },
+      "properties": {
+        "date": "2024-12-31T15:00:01",
+        "id": 5,
+        "measurements": {
+          "copper": {
+            "unit": "mg/l",
+            "value": 0.52,
+          },
+          "lead": {
+            "unit": "mg/l",
+            "value": 0.7,
+          },
+          "mercury": {
+            "unit": "mg/l",
+            "value": 0.7,
+          },
+          "nickel": {
+            "unit": "mg/l",
+            "value": 0.8,
+          },
+        },
+        "type": "manuell",
+      },
+      "type": "Feature",
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          10.46326,
+          52.262351,
+        ],
+        "type": "Point",
+      },
+      "properties": {
+        "date": "2024-12-31T15:00:02",
+        "id": 6,
+        "measurements": {
+          "boje akku": {
+            "unit": "%",
+            "value": 80,
+          },
+          "copper": {
+            "unit": "mg/l",
+            "value": 0.62,
+          },
+          "lead": {
+            "unit": "mg/l",
+            "value": 1,
+          },
+          "mercury": {
+            "unit": "mg/l",
+            "value": 0.5,
+          },
+          "nickel": {
+            "unit": "mg/l",
+            "value": 1.1,
+          },
+        },
+        "type": "boje",
+      },
+      "type": "Feature",
+    },
+  ],
+  "type": "FeatureCollection",
+}
+`;

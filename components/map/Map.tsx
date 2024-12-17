@@ -1,6 +1,6 @@
 'use client'
 
-import { Feature, FeatureCollection, Point } from 'geojson'
+import { Waterguardian } from '@/app/graph/samples/types'
 import 'maplibre-gl/dist/maplibre-gl.css'
 import { useState } from 'react'
 import { CustomMarker } from './CustomMarker'
@@ -14,26 +14,8 @@ const typeLabels: Record<string, string> = {
   manuell: 'Citizen Science Daten',
 }
 
-interface MeasurementData {
-  value: number
-  unit: string
-}
-
-interface WaterGuardianProperties {
-  id: string
-  date: string
-  type: string
-  measurements: Record<string, MeasurementData>
-}
-
-type WaterGuardianFeature = Feature<Point, WaterGuardianProperties>
-export type WaterGuardianFeatureCollection = FeatureCollection<
-  Point,
-  WaterGuardianProperties
->
-
 interface MapProps {
-  data?: WaterGuardianFeatureCollection
+  data?: Waterguardian.FeatureCollection
 }
 
 export const Map = ({ data }: MapProps) => {
@@ -44,7 +26,7 @@ export const Map = ({ data }: MapProps) => {
   })
 
   const [selectedFeature, setSelectedFeature] =
-    useState<WaterGuardianFeature | null>(null)
+    useState<Waterguardian.Feature | null>(null)
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [filteredTypes, setFilteredTypes] = useState<string[]>([
     'boje',
@@ -52,7 +34,7 @@ export const Map = ({ data }: MapProps) => {
     'manuell',
   ])
 
-  const handleMarkerClick = (feature: WaterGuardianFeature) => {
+  const handleMarkerClick = (feature: Waterguardian.Feature) => {
     setSelectedFeature(feature)
     setSidebarOpen(true)
   }
@@ -141,14 +123,18 @@ export const Map = ({ data }: MapProps) => {
                         key={key}
                         className="flex items-center justify-between"
                       >
-                        <span className="text-[--gray-11]">{key}</span>
+                        <span className="text-[--gray-11] capitalize">
+                          {key}
+                        </span>
                         <div className="flex items-center gap-2">
                           <span className="text-[--gray-12] font-medium">
                             {measurement.value}
                           </span>
-                          <span className="text-sm text-[--gray-10]">
-                            {measurement.unit}
-                          </span>
+                          {measurement.unit && (
+                            <span className="text-sm text-[--gray-10]">
+                              {measurement.unit}
+                            </span>
+                          )}
                         </div>
                       </li>
                     ),
