@@ -7,7 +7,8 @@
     "dev": "next dev --turbo",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "bun test ."
   },
   "dependencies": {
     "@mdx-js/loader": "^3.1.0",
@@ -32,10 +33,11 @@
   },
   "devDependencies": {
     "@types/bun": "^1.1.14",
+    "@types/geojson": "^7946.0.15",
     "@types/node": "^20",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
-    "bun": "^1.1.37",
+    "bun": "^1.1.38",
     "eslint": "^8",
     "eslint-config-next": "14.2.18",
     "eslint-config-prettier": "^9.1.0",

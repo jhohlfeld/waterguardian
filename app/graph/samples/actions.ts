@@ -3,6 +3,7 @@
 import { graphClientId, graphClientSecret, graphTenantId } from '@/config'
 import { encodeShareUrl } from '@/util/encodeShareUrl'
 import { createCache } from 'simple-in-memory-cache'
+import { WorksheetData } from './types'
 
 const { set, get } = createCache<string>()
 
@@ -109,7 +110,9 @@ async function fetchRangeFromWorksheet<T>(
   return values
 }
 
-export async function fetchWorksheet<T>(worksheetUrl: string): Promise<T> {
+export async function fetchWorksheet(
+  worksheetUrl: string,
+): Promise<WorksheetData> {
   const { driveId, itemId } = await fetchShareItem(encodeShareUrl(worksheetUrl))
   const worksheetId = await fetchWorksheetId(driveId, itemId)
   return fetchRangeFromWorksheet(driveId, itemId, worksheetId)
