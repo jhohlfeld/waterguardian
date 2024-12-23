@@ -36,7 +36,7 @@ export const Sidebar = ({ open, onClose, children }: SidebarProps) => {
     <div
       className={cn(
         'absolute top-4 right-4 z-40',
-        'h-full sm:h-fit max-h-[85%] w-80', // Responsive height and width
+        'h-full sm:h-fit max-h-[85%] w-80',
         'shadow-lg p-4',
         'rounded-xl overflow-hidden',
         'duration-300',
