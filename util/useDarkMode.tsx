@@ -29,14 +29,17 @@ export const DarkMode = () => {
       return
     }
 
+    // toggle class attribute based on media query
     const onChangeHandler = (e: MediaQueryList | MediaQueryListEvent) => {
       const isDark = e.matches
       document.querySelector('html')?.classList.toggle('dark', isDark)
     }
     onChangeHandler(mql)
 
+    // listen for changes
     mql.addEventListener('change', onChangeHandler)
 
+    // clean up
     return () => mql.removeEventListener('change', onChangeHandler)
   }, [mql])
 

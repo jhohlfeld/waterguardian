@@ -59,7 +59,7 @@ export const Map = ({ data }: MapProps) => {
         onFilterChange={handleFilterChange}
         onOpen={handleFilterOpen}
       />
-      {data?.features
+      {(data?.features || [])
         .filter((feature) => filteredTypes.includes(feature.properties.type))
         .map((feature) => (
           <CustomMarker
