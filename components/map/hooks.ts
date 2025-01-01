@@ -56,19 +56,15 @@ export function useMap(mapOptions?: {
       const pitch = instance.getPitch()
 
       const newStyle = getMapStyle(isDark)
-      try {
-        instance.setStyle(newStyle)
+      instance.setStyle(newStyle)
 
-        // Restore state after style loads
-        instance.once('style.load', () => {
-          instance.setCenter(center)
-          instance.setZoom(zoom)
-          instance.setBearing(bearing)
-          instance.setPitch(pitch)
-        })
-      } catch (error) {
-        console.error('Error updating map style:', error)
-      }
+      // Restore state after style loads
+      instance.once('style.load', () => {
+        instance.setCenter(center)
+        instance.setZoom(zoom)
+        instance.setBearing(bearing)
+        instance.setPitch(pitch)
+      })
     }
 
     // Set up observer after initial style load
