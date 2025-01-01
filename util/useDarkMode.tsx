@@ -4,17 +4,13 @@ import { useEffect, useMemo } from 'react'
 
 export const DarkMode = () => {
   // Initialize dark mode immediately
-  try {
-    if (typeof window !== 'undefined') {
-      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
-      const isDark = mediaQuery.matches
+  if (typeof window !== 'undefined') {
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
+    const isDark = mediaQuery.matches
 
-      if (isDark) {
-        document.documentElement.classList.add('dark')
-      }
+    if (isDark) {
+      document.documentElement.classList.add('dark')
     }
-  } catch (e) {
-    console.error('Error initializing dark mode:', e)
   }
 
   const mql = useMemo(() => {
