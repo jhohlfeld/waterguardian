@@ -46,8 +46,6 @@ export function useMap(mapOptions?: {
       document.documentElement.classList.add('dark')
     }
 
-    let observer: MutationObserver | null = null
-
     const updateMapStyle = (isDark: boolean) => {
       // Store current state
       const center = instance.getCenter()
@@ -67,22 +65,8 @@ export function useMap(mapOptions?: {
       })
     }
 
-    // Set up observer after initial style load
-    instance.once('style.load', () => {
-      observer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-          if (mutation.attributeName === 'class') {
-            const isDark = document.documentElement.classList.contains('dark')
-            updateMapStyle(isDark)
-          }
-        })
-      })
-
-      observer.observe(document.documentElement, {
-        attributes: true,
-        attributeFilter: ['class'],
-      })
-    })
+    // Set up initial style based on dark mode
+    updateMapStyle(isDark)
 
     if (mapOptions?.draggable === false) {
       instance.dragPan.disable()
@@ -97,9 +81,7 @@ export function useMap(mapOptions?: {
     setMap(instance)
 
     return () => {
-      if (observer) {
-        observer.disconnect()
-      }
+      // Cleanup code if needed
     }
   }, [mapOptions, map])
 
