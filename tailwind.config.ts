@@ -4,7 +4,6 @@ import tailwindcssAnimate from 'tailwindcss-animate'
 import tailwindcssRadixColors from 'tailwindcss-radix-colors'
 
 const config: Config = {
-  darkMode: 'class',
   content: [
     './components/**/*.{js,ts,jsx,tsx,mdx}',
     './app/**/*.{js,ts,jsx,tsx,mdx}',

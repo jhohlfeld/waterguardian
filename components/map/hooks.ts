@@ -3,6 +3,7 @@ import {
   maptilerHeroStyleKey,
   maptilerHeroStyleKeyDark,
 } from '@/config'
+import { useDarkMode } from '@/util/useDarkMode'
 import maplibregl from 'maplibre-gl'
 import { useEffect, useRef, useState } from 'react'
 
@@ -21,6 +22,7 @@ export function useMap(mapOptions?: {
 }) {
   const [map, setMap] = useState<maplibregl.Map | null>(null)
   const mapContainerRef = useRef<HTMLDivElement | null>(null)
+  const isDark = useDarkMode()
 
   useEffect(() => {
     if (!mapContainerRef.current || map !== null) {
@@ -46,28 +48,6 @@ export function useMap(mapOptions?: {
       document.documentElement.classList.add('dark')
     }
 
-    const updateMapStyle = (isDark: boolean) => {
-      // Store current state
-      const center = instance.getCenter()
-      const zoom = instance.getZoom()
-      const bearing = instance.getBearing()
-      const pitch = instance.getPitch()
-
-      const newStyle = getMapStyle(isDark)
-      instance.setStyle(newStyle)
-
-      // Restore state after style loads
-      instance.once('style.load', () => {
-        instance.setCenter(center)
-        instance.setZoom(zoom)
-        instance.setBearing(bearing)
-        instance.setPitch(pitch)
-      })
-    }
-
-    // Set up initial style based on dark mode
-    updateMapStyle(isDark)
-
     if (mapOptions?.draggable === false) {
       instance.dragPan.disable()
     }
@@ -84,6 +64,27 @@ export function useMap(mapOptions?: {
       // Cleanup code if needed
     }
   }, [mapOptions, map])
+
+  useEffect(() => {
+    // Whenever isDark changes, update the map style
+    if (map) {
+      const updateMapStyle = (isDark: boolean) => {
+        const center = map.getCenter()
+        const currentZoom = map.getZoom()
+        const bearing = map.getBearing()
+        const pitch = map.getPitch()
+
+        map.setStyle(getMapStyle(isDark))
+        map.once('style.load', () => {
+          map.setCenter(center)
+          map.setZoom(currentZoom)
+          map.setBearing(bearing)
+          map.setPitch(pitch)
+        })
+      }
+      updateMapStyle(isDark)
+    }
+  }, [isDark, map])
 
   return { mapContainerRef, map }
 }
