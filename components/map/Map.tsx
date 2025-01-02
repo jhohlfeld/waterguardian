@@ -59,7 +59,7 @@ export const Map = ({ data }: MapProps) => {
         onFilterChange={handleFilterChange}
         onOpen={handleFilterOpen}
       />
-      {(data?.features || [])
+      {data?.features
         .filter((feature) => filteredTypes.includes(feature.properties.type))
         .map((feature) => (
           <CustomMarker
@@ -79,7 +79,7 @@ export const Map = ({ data }: MapProps) => {
         {selectedFeature ? (
           <div className="space-y-6">
             <div>
-              <div className="text-sm font-semibold text-gray-10 mb-1">
+              <div className="text-sm font-semibold text-gray-12 mb-1">
                 Data Type
               </div>
               <div className="text-gray-12">
