@@ -29,24 +29,12 @@ export function useMap(mapOptions?: {
       return
     }
 
-    // Check both system preference and class for initial dark mode state
-    const systemDarkMode = window.matchMedia(
-      '(prefers-color-scheme: dark)',
-    ).matches
-    const htmlDarkMode = document.documentElement.classList.contains('dark')
-    const isDark = systemDarkMode || htmlDarkMode
-
     const instance = new maplibregl.Map({
       container: mapContainerRef.current,
       style: getMapStyle(isDark),
       center: [lng, lat],
       zoom: zoom,
     })
-
-    // Ensure dark mode class is set if system prefers dark
-    if (systemDarkMode && !htmlDarkMode) {
-      document.documentElement.classList.add('dark')
-    }
 
     if (mapOptions?.draggable === false) {
       instance.dragPan.disable()
@@ -59,30 +47,23 @@ export function useMap(mapOptions?: {
     }
 
     setMap(instance)
-
-    return () => {
-      // Cleanup code if needed
-    }
   }, [mapOptions, map])
 
   useEffect(() => {
     // Whenever isDark changes, update the map style
     if (map) {
-      const updateMapStyle = (isDark: boolean) => {
-        const center = map.getCenter()
-        const currentZoom = map.getZoom()
-        const bearing = map.getBearing()
-        const pitch = map.getPitch()
+      const center = map.getCenter()
+      const currentZoom = map.getZoom()
+      const bearing = map.getBearing()
+      const pitch = map.getPitch()
 
-        map.setStyle(getMapStyle(isDark))
-        map.once('style.load', () => {
-          map.setCenter(center)
-          map.setZoom(currentZoom)
-          map.setBearing(bearing)
-          map.setPitch(pitch)
-        })
-      }
-      updateMapStyle(isDark)
+      map.setStyle(getMapStyle(isDark))
+      map.once('style.load', () => {
+        map.setCenter(center)
+        map.setZoom(currentZoom)
+        map.setBearing(bearing)
+        map.setPitch(pitch)
+      })
     }
   }, [isDark, map])
 
