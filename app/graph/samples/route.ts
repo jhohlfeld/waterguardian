@@ -10,13 +10,7 @@ export async function GET() {
   } catch (e) {
     if (hasGraphErrorCause(e)) {
       console.error(JSON.stringify(e.cause, null, 2))
-      return Response.json(
-        {
-          type: 'FeatureCollection',
-          features: [],
-        },
-        { status: e.cause.status },
-      )
+      return Response.json({ error: e.cause.error }, { status: e.cause.status })
     } else {
       throw e
     }

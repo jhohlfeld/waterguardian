@@ -13,9 +13,16 @@ export default function Home() {
     fetch('/graph/samples')
       .then(
         (response) =>
-          response.json() as Promise<Waterguardian.FeatureCollection>,
+          response.json() as Promise<
+            Waterguardian.FeatureCollection | { error: { message: string } }
+          >,
       )
-      .then((featureCollection) => setData(featureCollection))
+      .then((data) => {
+        if ('error' in data) {
+          throw new Error(data.error.message)
+        }
+        setData(data)
+      })
       .catch((error) => console.error('Error fetching data:', error))
   }, [])
 
