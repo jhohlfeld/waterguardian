@@ -1,8 +1,15 @@
 'use client'
 
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 export const DarkMode = () => {
+  useDarkMode()
+  return null
+}
+
+export function useDarkMode() {
+  const [isDark, setIsDark] = useState(false)
+
   const mql = useMemo(() => {
     if (typeof matchMedia === 'undefined') {
       return
@@ -15,9 +22,12 @@ export const DarkMode = () => {
       return
     }
 
-    // toggle class attribute bsed on media query
-    const onChangeHandler = (e: MediaQueryList | MediaQueryListEvent) =>
-      document.querySelector('html')?.classList.toggle('dark', e.matches)
+    // toggle class attribute based on media query
+    const onChangeHandler = (e: MediaQueryList | MediaQueryListEvent) => {
+      const isDark = e.matches
+      document.querySelector('html')?.classList.toggle('dark', isDark)
+      setIsDark(isDark)
+    }
     onChangeHandler(mql)
 
     // listen for changes
@@ -27,5 +37,5 @@ export const DarkMode = () => {
     return () => mql.removeEventListener('change', onChangeHandler)
   }, [mql])
 
-  return null
+  return isDark
 }

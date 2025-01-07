@@ -79,28 +79,28 @@ export const Map = ({ data }: MapProps) => {
         {selectedFeature ? (
           <div className="space-y-6">
             <div>
-              <div className="text-sm font-semibold text-[--gray-10] mb-1">
+              <div className="text-sm font-semibold text-gray-12 mb-1">
                 Data Type
               </div>
-              <div className="text-[--gray-12]">
+              <div className="text-gray-12">
                 {typeLabels[selectedFeature.properties.type]}
               </div>
             </div>
 
             <div>
-              <div className="text-sm font-semibold text-[--gray-10] mb-1">
+              <div className="text-sm font-semibold text-gray-10 mb-1">
                 Location ID
               </div>
-              <div className="text-[--gray-12] font-mono">
+              <div className="text-gray-12 font-mono">
                 {selectedFeature.properties.id}
               </div>
             </div>
 
             <div>
-              <div className="text-sm font-semibold text-[--gray-10] mb-1">
+              <div className="text-sm font-semibold text-gray-10 mb-1">
                 Measurement Date
               </div>
-              <div className="text-[--gray-12]">
+              <div className="text-gray-12">
                 {new Date(selectedFeature.properties.date).toLocaleString(
                   'de-DE',
                   {
@@ -112,10 +112,10 @@ export const Map = ({ data }: MapProps) => {
             </div>
 
             <div>
-              <div className="text-sm font-semibold text-[--gray-10] mb-1">
+              <div className="text-sm font-semibold text-gray-10 mb-1">
                 Measurements
               </div>
-              <div className="bg-[--gray-2] rounded-lg p-4">
+              <div className="bg-gray-2 rounded-lg p-4">
                 <ul className="space-y-3">
                   {Object.entries(selectedFeature.properties.measurements).map(
                     ([key, measurement]) => (
@@ -123,15 +123,13 @@ export const Map = ({ data }: MapProps) => {
                         key={key}
                         className="flex items-center justify-between"
                       >
-                        <span className="text-[--gray-11] capitalize">
-                          {key}
-                        </span>
+                        <span className="text-gray-11 capitalize">{key}</span>
                         <div className="flex items-center gap-2">
-                          <span className="text-[--gray-12] font-medium">
+                          <span className="text-gray-12 font-medium">
                             {measurement.value}
                           </span>
                           {measurement.unit && (
-                            <span className="text-sm text-[--gray-10]">
+                            <span className="text-sm text-gray-10">
                               {measurement.unit}
                             </span>
                           )}
@@ -144,7 +142,7 @@ export const Map = ({ data }: MapProps) => {
             </div>
           </div>
         ) : (
-          <p className="text-[--gray-11]">No data selected</p>
+          <p className="text-gray-11">No data selected</p>
         )}
       </Sidebar>
     </div>

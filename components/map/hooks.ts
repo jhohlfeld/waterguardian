@@ -1,11 +1,19 @@
-import { maptilerApiKey, maptilerHeroStyleKey } from '@/config'
+import {
+  maptilerApiKey,
+  maptilerHeroStyleKey,
+  maptilerHeroStyleKeyDark,
+} from '@/config'
+import { useDarkMode } from '@/util/useDarkMode'
 import maplibregl from 'maplibre-gl'
 import { useEffect, useRef, useState } from 'react'
 
 const lng = 10.522
 const lat = 52.264
 const zoom = 13
-const style = `https://api.maptiler.com/maps/${maptilerHeroStyleKey}/style.json?key=${maptilerApiKey}`
+const getMapStyle = (isDark: boolean) => {
+  const styleKey = isDark ? maptilerHeroStyleKeyDark : maptilerHeroStyleKey
+  return `https://api.maptiler.com/maps/${styleKey}/style.json?key=${maptilerApiKey}`
+}
 
 export function useMap(mapOptions?: {
   draggable?: boolean
@@ -14,6 +22,7 @@ export function useMap(mapOptions?: {
 }) {
   const [map, setMap] = useState<maplibregl.Map | null>(null)
   const mapContainerRef = useRef<HTMLDivElement | null>(null)
+  const isDark = useDarkMode()
 
   useEffect(() => {
     if (!mapContainerRef.current || map !== null) {
@@ -22,7 +31,7 @@ export function useMap(mapOptions?: {
 
     const instance = new maplibregl.Map({
       container: mapContainerRef.current,
-      style,
+      style: getMapStyle(isDark),
       center: [lng, lat],
       zoom: zoom,
     })
@@ -39,6 +48,24 @@ export function useMap(mapOptions?: {
 
     setMap(instance)
   }, [mapOptions, map])
+
+  useEffect(() => {
+    // Whenever isDark changes, update the map style
+    if (map) {
+      const center = map.getCenter()
+      const currentZoom = map.getZoom()
+      const bearing = map.getBearing()
+      const pitch = map.getPitch()
+
+      map.setStyle(getMapStyle(isDark))
+      map.once('style.load', () => {
+        map.setCenter(center)
+        map.setZoom(currentZoom)
+        map.setBearing(bearing)
+        map.setPitch(pitch)
+      })
+    }
+  }, [isDark, map])
 
   return { mapContainerRef, map }
 }
