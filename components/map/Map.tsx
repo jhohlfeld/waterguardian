@@ -9,9 +9,8 @@ import { useMap } from './hooks'
 import { Sidebar } from './Sidebar'
 
 const typeLabels: Record<string, string> = {
-  boje: 'Bojen Daten',
-  labor: 'Labor-Daten',
-  manuell: 'Citizen Science Daten',
+  manual: 'Citizen Science Daten',
+  lab: 'Labor-Daten',
 }
 
 interface MapProps {
@@ -29,9 +28,8 @@ export const Map = ({ data }: MapProps) => {
     useState<Waterguardian.Feature | null>(null)
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [filteredTypes, setFilteredTypes] = useState<string[]>([
-    'boje',
-    'labor',
-    'manuell',
+    'manual',
+    'lab',
   ])
 
   const handleMarkerClick = (feature: Waterguardian.Feature) => {
