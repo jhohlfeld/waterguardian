@@ -1,6 +1,6 @@
 'use client'
 
-import { Waterguardian } from '@/app/graph/samples/types'
+import { Waterguardian } from '@/app/api/samples/types'
 import 'maplibre-gl/dist/maplibre-gl.css'
 import { useState } from 'react'
 import { CustomMarker } from './CustomMarker'

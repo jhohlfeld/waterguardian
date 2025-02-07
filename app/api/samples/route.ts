@@ -1,4 +1,4 @@
-import { Waterguardian } from '@/app/graph/samples/types'
+import { Waterguardian } from '@/app/api/samples/types'
 import client from '@/lib/mongodb'
 import { NextResponse } from 'next/server'
 

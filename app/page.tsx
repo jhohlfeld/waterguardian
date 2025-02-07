@@ -1,5 +1,5 @@
 import { Map } from '@/components/map/Map'
-import { Waterguardian } from './graph/samples/types'
+import { Waterguardian } from './api/samples/types'
 
 async function getSamples() {
   const response = await fetch('http://localhost:3000/api/samples', {
