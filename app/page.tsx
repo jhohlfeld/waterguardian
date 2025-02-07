@@ -1,30 +1,20 @@
-'use client'
-
 import { Map } from '@/components/map/Map'
-import { useEffect, useState } from 'react'
 import { Waterguardian } from './graph/samples/types'
 
-export default function Home() {
-  const [data, setData] = useState<
-    Waterguardian.FeatureCollection | undefined
-  >()
+async function getSamples() {
+  const response = await fetch('http://localhost:3000/api/samples', {
+    cache: 'no-store',
+  })
 
-  useEffect(() => {
-    fetch('/graph/samples')
-      .then(
-        (response) =>
-          response.json() as Promise<
-            Waterguardian.FeatureCollection | { error: { message: string } }
-          >,
-      )
-      .then((data) => {
-        if ('error' in data) {
-          throw new Error(data.error.message)
-        }
-        setData(data)
-      })
-      .catch((error) => console.error('Error fetching data:', error))
-  }, [])
+  if (!response.ok) {
+    throw new Error('Failed to fetch samples')
+  }
+
+  return response.json() as Promise<Waterguardian.FeatureCollection>
+}
+
+export default async function Home() {
+  const data = await getSamples()
 
   return (
     <main className="flex-grow flex">
