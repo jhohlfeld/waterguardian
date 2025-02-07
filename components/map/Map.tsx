@@ -124,13 +124,9 @@ export const Map = ({ data }: MapProps) => {
                         <span className="text-gray-11 capitalize">{key}</span>
                         <div className="flex items-center gap-2">
                           <span className="text-gray-12 font-medium">
-                            {measurement.value}
+                            {measurement.toFixed(2)}
                           </span>
-                          {measurement.unit && (
-                            <span className="text-sm text-gray-10">
-                              {measurement.unit}
-                            </span>
-                          )}
+                          <span className="text-sm text-gray-10">mg/L</span>
                         </div>
                       </li>
                     ),
