@@ -26,7 +26,7 @@ const types = [
   { id: 'lab', label: 'Labor-Daten', icon: Component2Icon },
 ]
 
-export const FilterPopover = ({
+export const SampleFilter = ({
   onFilterChange,
   onOpen,
 }: FilterPopoverProps) => {

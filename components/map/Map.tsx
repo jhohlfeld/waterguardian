@@ -3,9 +3,9 @@
 import { Waterguardian } from '@/app/api/samples/types'
 import 'maplibre-gl/dist/maplibre-gl.css'
 import { useState } from 'react'
-import { CustomMarker } from './CustomMarker'
-import { FilterPopover } from './FilterPopover'
 import { useMap } from './hooks'
+import { SampleFilter } from './SampleFilter'
+import { SampleMarker } from './SampleMarker'
 import { Sidebar } from './Sidebar'
 
 const typeLabels: Record<string, string> = {
@@ -53,14 +53,14 @@ export const Map = ({ data }: MapProps) => {
 
   return (
     <div className="flex-1 relative w-full" ref={mapContainerRef}>
-      <FilterPopover
+      <SampleFilter
         onFilterChange={handleFilterChange}
         onOpen={handleFilterOpen}
       />
       {data?.features
         .filter((feature) => filteredTypes.includes(feature.properties.type))
         .map((feature) => (
-          <CustomMarker
+          <SampleMarker
             key={feature.properties.id}
             map={map}
             position={[

@@ -11,7 +11,7 @@ interface CustomMarkerProps {
   isSelected?: boolean
 }
 
-export const CustomMarker = ({
+export const SampleMarker = ({
   map,
   position,
   onClick,
