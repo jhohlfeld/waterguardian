@@ -22,32 +22,42 @@ export async function loadAllUsers() {
 type FormState = { message?: string } | undefined
 
 export async function signIn(_state: FormState, formData: FormData) {
-  console.log('got formData:', JSON.stringify(formData))
+  try {
+    const { email, token } = Object.fromEntries(formData.entries()) as {
+      email: string
+      token: string
+    }
 
-  const { email, token } = Object.fromEntries(formData.entries()) as {
-    email: string
-    token: string
+    if (!email || !token) {
+      return { message: 'Email and password are required' }
+    }
+
+    const user = await client
+      .collection<User>('users')
+      .findOne({ email, token }, { projection: { token: 0 } })
+
+    if (user === null) {
+      return { message: 'Invalid credentials' }
+    }
+
+    const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).getTime()
+    const { _id, ...payload } = user
+    const session = await encrypt({ sub: String(_id), ...payload })
+    const cookieStore = await cookies()
+
+    cookieStore.set('session', session, {
+      httpOnly: true,
+      secure: true,
+      expires: expiresAt,
+      sameSite: 'lax',
+      path: '/',
+    })
+
+    return { success: true }
+  } catch (error) {
+    console.error('Login error:', error)
+    return { message: 'An error occurred during login' }
   }
-  const user = await client
-    .collection<User>('users')
-    .findOne({ email, token }, { projection: { token: 0 } })
-
-  if (user === null) {
-    return { message: 'Invalid credentials' }
-  }
-
-  const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).getTime()
-  const { _id, ...payload } = user
-  const session = await encrypt({ sub: String(_id), ...payload })
-  const cookieStore = await cookies()
-
-  cookieStore.set('session', session, {
-    httpOnly: true,
-    secure: true,
-    expires: expiresAt,
-    sameSite: 'lax',
-    path: '/',
-  })
 }
 
 export async function getSession() {

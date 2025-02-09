@@ -2,14 +2,23 @@
 
 import { signIn } from '@/lib/auth'
 import * as Dialog from '@radix-ui/react-dialog'
-import { AvatarIcon } from '@radix-ui/react-icons'
-import { Button, TextField } from '@radix-ui/themes'
-import { useActionState } from 'react'
+import { AvatarIcon, Cross2Icon } from '@radix-ui/react-icons'
+import { Button } from '@radix-ui/themes'
+import { useActionState, useEffect, useState } from 'react'
 
 export function LoginForm() {
   const [state, formAction, pending] = useActionState(signIn, undefined)
+  const [open, setOpen] = useState(false)
+
+  // Close dialog and refresh on successful login
+  useEffect(() => {
+    if (state?.success) {
+      setOpen(false)
+      window.location.reload() // Refresh to update session state
+    }
+  }, [state?.success])
   return (
-    <Dialog.Root>
+    <Dialog.Root open={open} onOpenChange={setOpen}>
       <Dialog.Trigger asChild>
         <Button radius="full" variant="ghost" className="w-8 h-8">
           <AvatarIcon className="w-8 h-8" />
@@ -32,40 +41,47 @@ export function LoginForm() {
             <main className="flex flex-col gap-4">
               <label className="flex flex-col gap-1">
                 Email
-                <TextField.Root
+                <input
                   type="email"
                   name="email"
+                  className="flex-1 w-full rounded-md bg-gray-3 px-3 py-2 text-gray-12 outline-none focus:ring-2 focus:ring-accent-8"
                   placeholder="Gib deine Email-Adresse an"
+                  required
                 />
               </label>
               <label className="flex flex-col gap-1">
                 Email-Token
-                <TextField.Root
+                <input
                   type="password"
                   name="token"
+                  className="flex-1 w-full rounded-md bg-gray-3 px-3 py-2 text-gray-12 outline-none focus:ring-2 focus:ring-accent-8"
                   placeholder="Gib dein Passwort an"
+                  required
                 />
               </label>
               {state?.message && (
-                <div className="text-reda-11">{state.message}</div>
+                <div className="text-red-11">{state.message}</div>
               )}
             </main>
             <footer className="flex gap-2 justify-end">
               <Dialog.Close asChild>
-                <Button variant="soft" color="gray" loading={pending}>
+                <Button
+                  variant="soft"
+                  color="gray"
+                  type="button"
+                  disabled={pending}
+                >
                   Schließen
                 </Button>
               </Dialog.Close>
-              <Dialog.Close asChild>
-                <Button type="submit" loading={pending}>
-                  Login
-                </Button>
-              </Dialog.Close>
+              <Button type="submit" disabled={pending}>
+                {pending ? 'Logging in...' : 'Login'}
+              </Button>
             </footer>
           </form>
           <Dialog.Close asChild className="absolute top-4 right-4">
             <Button variant="ghost" radius="full" className="h-8 w-8 p-0">
-              <AvatarIcon className="h-4 w-4" />
+              <Cross2Icon className="h-4 w-4" />
               <span className="sr-only">Close</span>
             </Button>
           </Dialog.Close>
