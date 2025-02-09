@@ -34,12 +34,15 @@ const Header: React.FC = () => {
 
           <li>
             {session ? (
-              <Avatar
-                radius="full"
-                variant="solid"
-                color="purple"
-                fallback={session.email.slice(0, 2)}
-              />
+              <Link href="/my-account">
+                <Avatar
+                  className="w-8 h-8"
+                  radius="full"
+                  variant="solid"
+                  color="purple"
+                  fallback={session.email.slice(0, 2)}
+                />
+              </Link>
             ) : (
               <LoginForm />
             )}

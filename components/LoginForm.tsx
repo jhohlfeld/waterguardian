@@ -10,8 +10,8 @@ export function LoginForm() {
   return (
     <Dialog.Root>
       <Dialog.Trigger>
-        <Button radius="full" variant="ghost">
-          <AvatarIcon />
+        <Button radius="full" variant="ghost" className="w-8 h-8">
+          <AvatarIcon className="w-8 h-8" />
         </Button>
       </Dialog.Trigger>
       <Dialog.Content className="w-full md:max-w-md">
@@ -20,7 +20,7 @@ export function LoginForm() {
           Logge dich ein, um bei Waterguardian mitzuhelfen!
         </Dialog.Description>
         <form className="flex flex-col gap-8 mt-8 max-w-md" action={formAction}>
-          <main className="flex flex-col gap-4 ">
+          <main className="flex flex-col gap-4">
             <label className="flex flex-col gap-1">
               Email
               <TextField.Root
@@ -37,7 +37,6 @@ export function LoginForm() {
                 placeholder="Gib dein Passwort an"
               />
             </label>
-
             {state?.message && (
               <div className="text-reda-11">{state.message}</div>
             )}
