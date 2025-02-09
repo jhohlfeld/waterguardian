@@ -20,6 +20,44 @@ export function SampleForm() {
   const [errors, setErrors] = useState<string[]>([])
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
   const [successMsg, setSuccessMsg] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
+
+  const getCurrentLocation = () => {
+    if (!navigator.geolocation) {
+      setErrors(['Geolocation is not supported by your browser'])
+      return
+    }
+
+    setIsLoading(true)
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setLatitude(position.coords.latitude.toString())
+        setLongitude(position.coords.longitude.toString())
+        setIsLoading(false)
+      },
+      (error) => {
+        setIsLoading(false)
+        switch (error.code) {
+          case error.PERMISSION_DENIED:
+            setErrors(['Please allow location access to use this feature'])
+            break
+          case error.POSITION_UNAVAILABLE:
+            setErrors(['Location information is unavailable'])
+            break
+          case error.TIMEOUT:
+            setErrors(['Location request timed out'])
+            break
+          default:
+            setErrors(['An unknown error occurred'])
+        }
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 5000,
+        maximumAge: 0,
+      },
+    )
+  }
 
   const validateField = (field: string, value: string) => {
     if (!value) return
@@ -151,69 +189,82 @@ export function SampleForm() {
           <p>{successMsg}</p>
         </div>
       )}
-      <div>
-        <label
-          htmlFor="latitude"
-          className="block text-sm font-medium text-gray-11"
+      <div className="space-y-4">
+        <div>
+          <label
+            htmlFor="latitude"
+            className="block text-sm font-medium text-gray-11"
+          >
+            Latitude <span className="text-red-10">*</span>
+          </label>
+          <input
+            type="number"
+            id="latitude"
+            name="latitude"
+            value={latitude}
+            onChange={(e) =>
+              handleFieldChange('latitude', e.target.value, setLatitude)
+            }
+            onBlur={(e) => validateField('latitude', e.target.value)}
+            className={`mt-1 block w-full rounded-lg border ${
+              fieldErrors.latitude ? 'border-red-6' : 'border-gray-6'
+            } bg-gray-2 px-4 py-3 text-lg text-gray-12 placeholder-gray-8 focus:border-accent-8 focus:outline-none focus:ring-2 focus:ring-accent-7 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-inner-spin-button]:m-0 [-moz-appearance:textfield]`}
+            placeholder="Enter latitude"
+            step="any"
+            required
+            onWheel={(e) => (e.target as HTMLInputElement).blur()}
+            aria-describedby={
+              fieldErrors.latitude ? 'latitude-error' : undefined
+            }
+          />
+          {fieldErrors.latitude && (
+            <p id="latitude-error" className="mt-1 text-sm text-red-10">
+              {fieldErrors.latitude}
+            </p>
+          )}
+        </div>
+        <div>
+          <label
+            htmlFor="longitude"
+            className="block text-sm font-medium text-gray-11"
+          >
+            Longitude <span className="text-red-10">*</span>
+          </label>
+          <input
+            type="number"
+            id="longitude"
+            name="longitude"
+            value={longitude}
+            onChange={(e) =>
+              handleFieldChange('longitude', e.target.value, setLongitude)
+            }
+            onBlur={(e) => validateField('longitude', e.target.value)}
+            className={`mt-1 block w-full rounded-lg border ${
+              fieldErrors.longitude ? 'border-red-6' : 'border-gray-6'
+            } bg-gray-2 px-4 py-3 text-lg text-gray-12 placeholder-gray-8 focus:border-accent-8 focus:outline-none focus:ring-2 focus:ring-accent-7 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-inner-spin-button]:m-0 [-moz-appearance:textfield]`}
+            placeholder="Enter longitude"
+            step="any"
+            required
+            onWheel={(e) => (e.target as HTMLInputElement).blur()}
+            aria-describedby={
+              fieldErrors.longitude ? 'longitude-error' : undefined
+            }
+          />
+          {fieldErrors.longitude && (
+            <p id="longitude-error" className="mt-1 text-sm text-red-10">
+              {fieldErrors.longitude}
+            </p>
+          )}
+        </div>
+        <Button
+          type="button"
+          onClick={getCurrentLocation}
+          disabled={isLoading}
+          variant="soft"
+          className="w-full"
         >
-          Latitude <span className="text-red-10">*</span>
-        </label>
-        <input
-          type="number"
-          id="latitude"
-          name="latitude"
-          value={latitude}
-          onChange={(e) =>
-            handleFieldChange('latitude', e.target.value, setLatitude)
-          }
-          onBlur={(e) => validateField('latitude', e.target.value)}
-          className={`mt-1 block w-full rounded-lg border ${
-            fieldErrors.latitude ? 'border-red-6' : 'border-gray-6'
-          } bg-gray-2 px-4 py-3 text-lg text-gray-12 placeholder-gray-8 focus:border-accent-8 focus:outline-none focus:ring-2 focus:ring-accent-7 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-inner-spin-button]:m-0 [-moz-appearance:textfield]`}
-          placeholder="Enter latitude"
-          step="any"
-          required
-          onWheel={(e) => (e.target as HTMLInputElement).blur()}
-          aria-describedby={fieldErrors.latitude ? 'latitude-error' : undefined}
-        />
-        {fieldErrors.latitude && (
-          <p id="latitude-error" className="mt-1 text-sm text-red-10">
-            {fieldErrors.latitude}
-          </p>
-        )}
-      </div>
-      <div>
-        <label
-          htmlFor="longitude"
-          className="block text-sm font-medium text-gray-11"
-        >
-          Longitude <span className="text-red-10">*</span>
-        </label>
-        <input
-          type="number"
-          id="longitude"
-          name="longitude"
-          value={longitude}
-          onChange={(e) =>
-            handleFieldChange('longitude', e.target.value, setLongitude)
-          }
-          onBlur={(e) => validateField('longitude', e.target.value)}
-          className={`mt-1 block w-full rounded-lg border ${
-            fieldErrors.longitude ? 'border-red-6' : 'border-gray-6'
-          } bg-gray-2 px-4 py-3 text-lg text-gray-12 placeholder-gray-8 focus:border-accent-8 focus:outline-none focus:ring-2 focus:ring-accent-7 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-inner-spin-button]:m-0 [-moz-appearance:textfield]`}
-          placeholder="Enter longitude"
-          step="any"
-          required
-          onWheel={(e) => (e.target as HTMLInputElement).blur()}
-          aria-describedby={
-            fieldErrors.longitude ? 'longitude-error' : undefined
-          }
-        />
-        {fieldErrors.longitude && (
-          <p id="longitude-error" className="mt-1 text-sm text-red-10">
-            {fieldErrors.longitude}
-          </p>
-        )}
+          {isLoading ? 'Getting Location...' : 'Get Current Location'}
+        </Button>
       </div>
       <div>
         <label
