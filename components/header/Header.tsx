@@ -1,15 +1,19 @@
 'use client'
 
+import { useSession } from '@/lib/hooks'
+import { Avatar } from '@radix-ui/themes'
 import Link from 'next/link'
 import { useState } from 'react'
+import { LoginForm } from '../LoginForm'
 import { Logo } from './Logo'
 
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const { session } = useSession()
 
   return (
     <header className="w-full bg-gray-1 text-gray-11 shadow-md sticky top-0 z-10">
-      <nav className="flex justify-between items-center p-4 max-w-7xl mx-auto">
+      <nav className="flex justify-between items-center p-4 max-w-7xl mx-auto list-none">
         {/* Logo */}
         <div className="flex items-center">
           <Link href="/">
@@ -18,14 +22,32 @@ const Header: React.FC = () => {
         </div>
 
         {/* Navigation Links */}
-        <div className="hidden md:flex space-x-6 text-sm uppercase font-bold">
-          <Link
-            href="/about"
-            className="transition-all ease-in-out duration-300 hover:text-accent-12 p-2 hover:tracking-wide"
-          >
-            About
-          </Link>
-        </div>
+        <ul className="flex gap-4 items-center">
+          <li className="hidden md:flex space-x-6 text-sm uppercase font-bold">
+            <Link
+              href="/about"
+              className="transition-all ease-in-out duration-300 hover:text-accent-12 p-2 hover:tracking-wide"
+            >
+              About
+            </Link>
+          </li>
+
+          <li>
+            {session ? (
+              <Link href="/my-account">
+                <Avatar
+                  className="w-8 h-8"
+                  radius="full"
+                  variant="solid"
+                  color="purple"
+                  fallback={session.email.slice(0, 2)}
+                />
+              </Link>
+            ) : (
+              <LoginForm />
+            )}
+          </li>
+        </ul>
 
         {/* Hamburger Menu for Mobile */}
         <div className="md:hidden">

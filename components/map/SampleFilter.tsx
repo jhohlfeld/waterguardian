@@ -4,7 +4,6 @@ import { Checkbox, CheckboxIndicator } from '@radix-ui/react-checkbox'
 import {
   CheckIcon,
   Component2Icon,
-  DotIcon,
   LayersIcon,
   PersonIcon,
 } from '@radix-ui/react-icons'
@@ -23,12 +22,11 @@ interface FilterPopoverProps {
 }
 
 const types = [
-  { id: 'boje', label: 'Bojen Daten', icon: DotIcon },
-  { id: 'labor', label: 'Labor-Daten', icon: Component2Icon },
-  { id: 'manuell', label: 'Citizen Science Daten', icon: PersonIcon },
+  { id: 'manual', label: 'Citizen Science Daten', icon: PersonIcon },
+  { id: 'lab', label: 'Labor-Daten', icon: Component2Icon },
 ]
 
-export const FilterPopover = ({
+export const SampleFilter = ({
   onFilterChange,
   onOpen,
 }: FilterPopoverProps) => {

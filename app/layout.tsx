@@ -36,6 +36,8 @@ export default function RootLayout({
         {children}
         <Footer />
         <DarkMode />
+        <div id="dialog-root" className="relative z-[100]" />{' '}
+        {/* Portal container for dialogs */}
       </body>
     </html>
   )
