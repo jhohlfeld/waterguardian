@@ -9,10 +9,10 @@ export const sampleInputSchema = z.object({
   }),
   sampleType: z.string(),
   measurements: z.object({
-    Copper: z.number(),
-    Lead: z.number(),
-    Nickel: z.number(),
-    Mercury: z.number(),
+    Copper: z.number().optional(),
+    Lead: z.number().optional(),
+    Nickel: z.number().optional(),
+    Mercury: z.number().optional(),
   }),
 })
 
@@ -28,10 +28,10 @@ export const sampleSchema = z.object({
     date: z.date(),
     type: z.string(),
     measurements: z.object({
-      Copper: z.number(),
-      Lead: z.number(),
-      Nickel: z.number(),
-      Mercury: z.number(),
+      Copper: z.number().optional(),
+      Lead: z.number().optional(),
+      Nickel: z.number().optional(),
+      Mercury: z.number().optional(),
     }),
   }),
 })
