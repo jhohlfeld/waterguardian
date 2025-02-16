@@ -1,30 +1,24 @@
-'use client'
-
 import { Map } from '@/components/map/Map'
-import { useEffect, useState } from 'react'
-import { Waterguardian } from './graph/samples/types'
+import { Waterguardian } from './api/samples/types'
 
-export default function Home() {
-  const [data, setData] = useState<
-    Waterguardian.FeatureCollection | undefined
-  >()
+async function getSamples() {
+  const baseUrl = process.env.VERCEL_URL
+    ? `https://${process.env.VERCEL_URL}`
+    : 'http://localhost:3000'
 
-  useEffect(() => {
-    fetch('/graph/samples')
-      .then(
-        (response) =>
-          response.json() as Promise<
-            Waterguardian.FeatureCollection | { error: { message: string } }
-          >,
-      )
-      .then((data) => {
-        if ('error' in data) {
-          throw new Error(data.error.message)
-        }
-        setData(data)
-      })
-      .catch((error) => console.error('Error fetching data:', error))
-  }, [])
+  const response = await fetch(`${baseUrl}/api/samples`, {
+    cache: 'no-store',
+  })
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch samples')
+  }
+
+  return response.json() as Promise<Waterguardian.FeatureCollection>
+}
+
+export default async function Home() {
+  const data = await getSamples()
 
   return (
     <main className="flex-grow flex">
