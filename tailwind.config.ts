@@ -65,6 +65,9 @@ const config: Config = {
           },
         },
       },
+      aspectRatio: {
+        '4/3': '4 / 3',
+      },
     },
   },
   plugins: [typography, tailwindcssRadixColors, tailwindcssAnimate],
