@@ -11,6 +11,8 @@
     "test": "bun test ."
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.744.0",
+    "@aws-sdk/s3-request-presigner": "^3.744.0",
     "@mdx-js/loader": "^3.1.0",
     "@mdx-js/react": "^3.1.0",
     "@next/mdx": "^15.0.3",

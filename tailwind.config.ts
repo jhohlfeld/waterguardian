@@ -11,6 +11,20 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        black: {
+          a1: 'var(--gray-a1)',
+          a2: 'var(--gray-a2)',
+          a3: 'var(--gray-a3)',
+          a4: 'var(--gray-a4)',
+          a5: 'var(--gray-a5)',
+          a6: 'var(--gray-a6)',
+          a7: 'var(--gray-a7)',
+          a8: 'var(--gray-a8)',
+          a9: 'var(--gray-a9)',
+          a10: 'var(--gray-a10)',
+          a11: 'var(--gray-a11)',
+          a12: 'var(--gray-a12)',
+        },
         gray: {
           1: 'var(--gray-1)',
           2: 'var(--gray-2)',
